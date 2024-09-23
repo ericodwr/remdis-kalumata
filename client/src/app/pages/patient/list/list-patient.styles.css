@@ -1,0 +1,25 @@
+::ng-deep
+  .p-datatable.p-datatable-gridlines:has(.p-datatable-thead):has(
+    .p-datatable-tbody
+  )
+  .p-datatable-tbody
+  > tr
+  > td {
+  height: 5vh;
+}
+
+::ng-deep .p-datatable-wrapper {
+  height: 55vh;
+  background-color: white;
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background-color: var(--PRIMARY);
+  color: white;
+  border-color: var(--PRIMARY);
+  /* border-radius: 0; */
+}
+
+::ng-deep .p-datatable .p-datatable-header {
+  background-color: white;
+}

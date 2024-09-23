@@ -1,0 +1,14 @@
+.content {
+  background-color: #f4f5f4;
+}
+
+::ng-deep .p-breadcrumb {
+  background: #f4f5f4;
+  border-color: #f4f5f4;
+  padding: 0;
+}
+
+::ng-deep .p-breadcrumb .p-breadcrumb-list li:last-child .p-menuitem-text {
+  color: var(--PRIMARY);
+  font-weight: bold;
+}

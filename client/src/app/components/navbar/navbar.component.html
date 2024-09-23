@@ -1,0 +1,12 @@
+<div class="bg-white w-full h-4rem sticky top-0 z-5 shadow-5">
+  <div class="flex flex-row-reverse align-items-center h-full">
+    <div class="flex flex-row-reverse gap-4 m-4">
+      <img src="/assets/navbar/profile.svg" alt="profile" />
+      <div class="flex flex-column align-items-end">
+        <h4>Halo, {{ nama }}</h4>
+        <span>{{ dateNow | date : "EEEE, MMMM d, y" }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+<breadcrumbs></breadcrumbs>

@@ -1,0 +1,22 @@
+/* You can add global styles to this file, and also import other style files */
+@import "primeicons/primeicons.css";
+@import "../node_modules/quill/dist/quill.core.css";
+@import "../node_modules/quill/dist/quill.snow.css";
+
+:root {
+  --PRIMARY: #58a24e;
+  --PRIMARY-DARK: #128716;
+  --SECONDARY: #8abc7f;
+  --LIGHT: #e7f2e5;
+  --DARK: #1a6716;
+}
+
+.main {
+  background-color: #f4f5f4;
+  width: 100vw;
+  height: 100vh;
+}
+
+.divider {
+  height: 6px;
+}

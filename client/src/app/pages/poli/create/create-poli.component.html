@@ -1,0 +1,79 @@
+<div class="m-4 min-h-screen">
+  <h2>Buat Data Pelayanan Poli</h2>
+
+  <div class="bg-white p-4 my-5 shadow-1 border-round-xl">
+    <div class="flex flex-column gap-3">
+      <h3>Tambah Data Pelayanan</h3>
+      <p>Isi informasi poli untuk disimpan kedalam data puskesmas</p>
+      <div class="surface-200 w-full divider"></div>
+    </div>
+
+    <form class="mt-4" [formGroup]="poliReqDto">
+      <div class="grid">
+        <div class="col-12 flex flex-column gap-2">
+          <label for="nama"
+            >Jenis Pelayanan <span class="text-red-600">*</span></label
+          >
+          <input
+            pInputText
+            id="nama"
+            formControlName="nama"
+            aria-describedby="username-help"
+          />
+        </div>
+
+        <div class="col-12 flex flex-column gap-2">
+          <label for="username"
+            >Username <span class="text-red-600">*</span></label
+          >
+          <input
+            pInputText
+            id="username"
+            formControlName="username"
+            aria-describedby="username-help"
+          />
+        </div>
+
+        <div class="col-12 grid">
+          <div class="col-6 flex flex-column gap-2">
+            <label for="password"
+              >Kata Sandi <span class="text-red-600">*</span></label
+            >
+            <p-password
+              id="password"
+              formControlName="password"
+              aria-describedby="username-help"
+              [toggleMask]="true"
+            />
+          </div>
+          <div class="col-6 flex flex-column gap-2">
+            <label for="confirmPassword"
+              >Konfirmasi Kata Sandi <span class="text-red-600">*</span></label
+            >
+            <p-password
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              aria-describedby="username-help"
+              [toggleMask]="true"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="flex gap-4 justify-content-end mt-4">
+        <app-button
+          label="Cancel"
+          btnType="button"
+          (clickChange)="onCancel()"
+          classBtn="p-button-secondary"
+        >
+        </app-button>
+        <app-button
+          label="Simpan dan Buat Poli"
+          [loading]="loading"
+          (clickChange)="onCreatePoli()"
+        >
+        </app-button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,746 @@
+<div class="m-4">
+  <h2>Detail Pasien</h2>
+
+  <!-- Form Patient Data  -->
+  <div class="bg-white p-4 my-5 shadow-1 border-round-xl">
+    <div class="flex flex-column gap-3">
+      <h3>Identitas Pasien</h3>
+      <p>Isi informasi pasien untuk disimpan kedalam data puskesmas</p>
+      <div class="surface-200 w-full divider"></div>
+    </div>
+
+    <form class="grid mt-4" [formGroup]="patientForm">
+      <div class="col-12 grid">
+        <div class="flex flex-column gap-2 col-6">
+          <label for="username">Nama <span class="text-red-600">*</span></label>
+          <input
+            pInputText
+            id="username"
+            formControlName="nama"
+            [readOnly]="!isEdited"
+          />
+        </div>
+        <div class="flex flex-column gap-2 col-6">
+          <label for="nik">NIK <span class="text-red-600">*</span></label>
+          <input
+            pInputText
+            id="nik"
+            formControlName="NIK"
+            [readOnly]="!isEdited"
+          />
+        </div>
+      </div>
+      <div class="col-12 grid">
+        <div class="flex flex-column gap-2 col-6">
+          <label for="pekerjaan"
+            >Pekerjaan <span class="text-red-600">*</span></label
+          >
+          <input
+            pInputText
+            id="pekerjaan"
+            formControlName="pekerjaan"
+            [readOnly]="!isEdited"
+          />
+        </div>
+        <div class="flex flex-column gap-2 col-6">
+          <label for="no_telp"
+            >Nomor Handphone <span class="text-red-600">*</span></label
+          >
+          <input
+            pInputText
+            id="no_telp"
+            formControlName="no_telp"
+            pKeyFilter="int"
+            [readOnly]="!isEdited"
+          />
+        </div>
+      </div>
+      <div class="col-12 grid">
+        <div class="flex flex-column gap-2 col-6">
+          <label for="usia">Usia <span class="text-red-600">*</span></label>
+          <p-inputNumber
+            formControlName="usia"
+            inputId="integeronly"
+            id="usia"
+            [useGrouping]="false"
+            [readonly]="!isEdited"
+          />
+        </div>
+        <div class="flex flex-column gap-2 col-6">
+          <label for="agama">Agama <span class="text-red-600">*</span></label>
+          <input
+            pInputText
+            id="agama"
+            formControlName="agama"
+            [readOnly]="!isEdited"
+          />
+        </div>
+      </div>
+      <div class="col-12 flex flex-row gap-4" *ngIf="isEdited; else elseBlock">
+        <div *ngFor="let gender of genders" class="field-checkbox">
+          <p-radioButton
+            [inputId]="gender.key"
+            [value]="gender.key"
+            formControlName="jenis_kelamin"
+          />
+          <label [for]="gender.key" class="ml-2">
+            {{ gender.name }}
+          </label>
+        </div>
+      </div>
+      <ng-template #elseBlock>
+        <div class="col-12 flex flex-column gap-3">
+          <label> Jenis Kelamin <span class="text-red-600">*</span> </label>
+          <label class="capitalize">
+            {{ patientForm.get("jenis_kelamin")?.value }}
+          </label>
+        </div>
+      </ng-template>
+      <div class="col-12">
+        <label for="username">Alamat <span class="text-red-600">*</span></label>
+        <textarea
+          rows="3"
+          class="col-12 mt-2"
+          [autoResize]="false"
+          pInputTextarea
+          formControlName="alamat"
+          [readOnly]="!isEdited"
+        ></textarea>
+      </div>
+    </form>
+  </div>
+  <!-- Form Patient Data  -->
+
+  <!-- Form Rekam Medis -->
+  <div class="bg-white p-4 shadow-1 border-round-xl">
+    <div class="flex justify-content-between">
+      <div>
+        <h3>Informasi Rekam Medis</h3>
+        <p class="mt-1">Seluruh informasi terkait jejak rekam medis</p>
+      </div>
+      <div class="flex gap-4">
+        <app-button label="Cetak Rekam Medis" classBtn="p-button-secondary">
+        </app-button>
+        <app-button
+          label="Tambah Rekam Medis"
+          (clickChange)="isModalCreateRemdis = true"
+        >
+        </app-button>
+      </div>
+    </div>
+    <div class="surface-200 w-full divider my-4"></div>
+    <p-table
+      #dt1
+      [value]="remdis"
+      dataKey="id"
+      [rows]="5"
+      [paginator]="true"
+      styleClass="p-datatable-gridlines"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      [showCurrentPageReport]="true"
+      [globalFilterFields]="['nama', 'id']"
+      scrollable="true"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>
+            <div class="flex align-items-center gap-2">No.</div>
+          </th>
+          <th pSortableColumn="nama">
+            <div class="flex align-items-center">
+              Kategori Poli
+              <p-sortIcon field="nama" />
+            </div>
+          </th>
+          <th pSortableColumn="id">
+            <div class="flex align-items-center">
+              Nama Dokter
+              <p-sortIcon field="id" />
+            </div>
+          </th>
+          <th>
+            <div class="flex align-items-center">Waktu Kunjungan</div>
+          </th>
+          <th pSortableColumn="no_handphone">
+            <div class="flex align-items-center">Diagnosa Penyakit</div>
+          </th>
+          <th pSortableColumn="updatedAt">
+            <div class="flex align-items-center">Action</div>
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-remdis let-rowIndex="rowIndex">
+        <tr>
+          <td>
+            {{ rowIndex + 1 }}
+          </td>
+          <td>
+            {{ remdis.user.nama }}
+          </td>
+          <td>
+            {{ remdis.nama_dokter }}
+          </td>
+          <td>
+            {{ remdis.updatedAt | date : "dd/MM/yyyy" }}
+          </td>
+          <td>
+            {{ remdis.diagnosa_penyakit }}
+          </td>
+          <td>
+            <app-button
+              label="Lihat Rekam Medis"
+              (clickChange)="openDetailRemdisModal(remdis.id)"
+              btnType="button"
+              classBtn="p-button-secondary"
+            ></app-button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <p class="text-red-600 mt-4">*Rekam Medis wajib di isi!</p>
+  </div>
+</div>
+
+<!-- Modal Create Remdis -->
+<p-dialog
+  header="Buat Rekam Medis"
+  [modal]="true"
+  [(visible)]="isModalCreateRemdis"
+  [style]="{ width: '80vw' }"
+>
+  <form class="grid mt-4" [formGroup]="remdisForm">
+    <!-- Keluhan Pasien -->
+    <div class="col-12 mt-3">
+      <h3>Keluhan Pasien</h3>
+      <div class="surface-200 w-full"></div>
+    </div>
+    <div class="col-12 flex flex-column gap-3">
+      <label for="keluhan-utama"
+        >Keluhan Utama <span class="text-red-600">*</span></label
+      >
+      <input pInputText id="keluhan-utama" formControlName="keluhan_utama" />
+    </div>
+    <div class="col-12 flex flex-column gap-3">
+      <label for="riwayat-penyakit"
+        >Riwayat Penyakit/Pemberian Obat
+        <span class="text-gray-600">(Opsional)</span></label
+      >
+      <p-editor
+        [style]="{ height: '220px' }"
+        id="riwayat-penyakit"
+        formControlName="riwayat_penyakit_obat_opsional"
+      >
+        <ng-template pTemplate="header">
+          <span class="ql-formats">
+            <select class="ql-size mr-3">
+              <option value="small"></option>
+              <!-- Note a missing, thus falsy value, is used to reset to default -->
+              <option selected></option>
+              <option value="large"></option>
+              <option value="huge"></option>
+            </select>
+            <button type="button" class="ql-bold" aria-label="Bold"></button>
+            <button
+              type="button"
+              class="ql-italic"
+              aria-label="Italic"
+            ></button>
+            <button
+              type="button"
+              class="ql-underline"
+              aria-label="Underline"
+            ></button>
+            <button class="ql-list ml-3" value="ordered"></button>
+            <button class="ql-list" value="bullet"></button>
+          </span>
+        </ng-template>
+      </p-editor>
+    </div>
+    <!-- Keluhan Pasien -->
+
+    <!-- Diagnosis Sementara -->
+    <div class="col-12 mt-3">
+      <h3>Penilaian/Diagnosis Sementara</h3>
+      <div class="surface-200 w-full"></div>
+    </div>
+    <div class="col-12 flex flex-column gap-3">
+      <label for="diagnosa"
+        >Diagnosa Penyakit <span class="text-red-600">*</span></label
+      >
+      <input pInputText id="diagnosa" formControlName="diagnosa_penyakit" />
+    </div>
+    <div class="col-12 flex flex-column gap-3">
+      <label for="rencana-tindakan"
+        >Rencana Tindakan <span class="text-gray-600">(Opsional)</span></label
+      >
+      <p-editor
+        [style]="{ height: '220px' }"
+        id="rencana-tindakan"
+        formControlName="rencana_tindakan_opsional"
+      >
+        <ng-template pTemplate="header">
+          <span class="ql-formats">
+            <select class="ql-size mr-3">
+              <option value="small"></option>
+              <!-- Note a missing, thus falsy value, is used to reset to default -->
+              <option selected></option>
+              <option value="large"></option>
+              <option value="huge"></option>
+            </select>
+            <button type="button" class="ql-bold" aria-label="Bold"></button>
+            <button
+              type="button"
+              class="ql-italic"
+              aria-label="Italic"
+            ></button>
+            <button
+              type="button"
+              class="ql-underline"
+              aria-label="Underline"
+            ></button>
+            <button class="ql-list ml-3" value="ordered"></button>
+            <button class="ql-list" value="bullet"></button>
+          </span>
+        </ng-template>
+      </p-editor>
+    </div>
+    <!-- Diagnosis Sementara -->
+
+    <!-- Pemeriksaan Fisik -->
+    <div class="col-12 mt-3">
+      <h3>Pemeriksaan Fisik (Opsional)</h3>
+      <div class="surface-200 w-full"></div>
+    </div>
+
+    <!-- Row Pertama -->
+    <div class="col-12 grid">
+      <div class="flex flex-column gap-2 col-4">
+        <label for="tekanan-darah">Tekanan Darah </label>
+        <p-inputGroup>
+          <p-inputNumber
+            formControlName="tekanan_darah"
+            inputId="integeronly"
+            id="tekanan-darah"
+            [useGrouping]="false"
+          />
+          <p-inputGroupAddon>/Menit</p-inputGroupAddon>
+        </p-inputGroup>
+      </div>
+      <div class="flex flex-column gap-2 col-4">
+        <label for="denyut-nadi">Denyut Nadi </label>
+        <p-inputGroup>
+          <p-inputNumber
+            inputId="integeronly"
+            id="denyut-nadi"
+            [useGrouping]="false"
+            formControlName="denyut_nadi"
+          />
+          <p-inputGroupAddon>/Menit</p-inputGroupAddon>
+        </p-inputGroup>
+      </div>
+      <div class="flex flex-column gap-2 col-4">
+        <label for="pernapasan">Pernapasan </label>
+        <p-inputGroup>
+          <p-inputNumber
+            inputId="integeronly"
+            id="pernapasan"
+            [useGrouping]="false"
+            formControlName="pernapasan"
+          />
+          <p-inputGroupAddon>/Menit</p-inputGroupAddon>
+        </p-inputGroup>
+      </div>
+    </div>
+    <!-- Row Pertama -->
+
+    <!-- Row Kedua -->
+    <div class="col-12 grid">
+      <div class="flex flex-column gap-2 col-4">
+        <label for="suhu-tubuh">Suhu Tubuh </label>
+        <p-inputGroup>
+          <p-inputNumber
+            inputId="integeronly"
+            id="suhu-tubuh"
+            [useGrouping]="false"
+            formControlName="suhu_tubuh"
+          />
+          <p-inputGroupAddon>C°</p-inputGroupAddon>
+        </p-inputGroup>
+      </div>
+      <div class="flex flex-column gap-2 col-4">
+        <label for="tinggi-badan">Tinggi Badan </label>
+        <p-inputGroup>
+          <p-inputNumber
+            inputId="integeronly"
+            id="tinggi-badan"
+            [useGrouping]="false"
+            formControlName="tinggi_badan"
+          />
+          <p-inputGroupAddon>Cm</p-inputGroupAddon>
+        </p-inputGroup>
+      </div>
+      <div class="flex flex-column gap-2 col-4">
+        <label for="berat-badan">Berat Badan </label>
+        <p-inputGroup>
+          <p-inputNumber
+            inputId="integeronly"
+            id="berat-badan"
+            [useGrouping]="false"
+            formControlName="berat_badan"
+          />
+          <p-inputGroupAddon>Kg</p-inputGroupAddon>
+        </p-inputGroup>
+      </div>
+    </div>
+    <!-- Row Kedua -->
+
+    <!-- Row Ketiga -->
+    <div class="col-12 flex flex-column gap-3">
+      <label for="pemeriksaan-fisik-tambahan"
+        >Pemeriksaan Fisik Tambahan
+        <span class="text-gray-600">(Opsional)</span></label
+      >
+      <p-editor
+        [style]="{ height: '220px' }"
+        id="pemeriksaan-fisik-tambahan"
+        formControlName="pemeriksaan_fisik_tambahan_opsional"
+      >
+        <ng-template pTemplate="header">
+          <span class="ql-formats">
+            <select class="ql-size mr-3">
+              <option value="small"></option>
+              <!-- Note a missing, thus falsy value, is used to reset to default -->
+              <option selected></option>
+              <option value="large"></option>
+              <option value="huge"></option>
+            </select>
+            <button type="button" class="ql-bold" aria-label="Bold"></button>
+            <button
+              type="button"
+              class="ql-italic"
+              aria-label="Italic"
+            ></button>
+            <button
+              type="button"
+              class="ql-underline"
+              aria-label="Underline"
+            ></button>
+            <button class="ql-list ml-3" value="ordered"></button>
+            <button class="ql-list" value="bullet"></button>
+          </span>
+        </ng-template>
+      </p-editor>
+    </div>
+    <!-- Row Ketiga -->
+    <!-- Pemeriksaan Fisik -->
+
+    <!-- Penanggung Jawab Pelayanan -->
+    <div class="col-12 flex flex-column gap-3">
+      <label for="penanggung-jawab"
+        >Nama Dokter <span class="text-red-600">*</span></label
+      >
+      <input pInputText id="penanggung-jawab" formControlName="nama_dokter" />
+    </div>
+    <!-- Penanggung Jawab Pelayanan -->
+
+    <div class="col-12">
+      <div class="flex justify-content-end gap-2">
+        <p-button
+          label="Cancel"
+          severity="secondary"
+          (onClick)="closeModalRmedis()"
+        />
+        <app-button
+          label="Save"
+          (clickChange)="onCreateRemdis()"
+          [loading]="loadingCreateRemdis"
+        />
+      </div>
+    </div>
+  </form>
+</p-dialog>
+<!-- Modal Create Remdis -->
+
+<!-- Modal View Detail Remdis -->
+<p-dialog
+  header="Buat Rekam Medis"
+  [modal]="true"
+  [(visible)]="isModalDetailRemdis"
+  [style]="{ width: '80vw' }"
+>
+  <form class="grid mt-4" [formGroup]="remdisDetail">
+    <!-- Keluhan Pasien -->
+    <div class="col-12 mt-3">
+      <h3>Keluhan Pasien</h3>
+      <div class="surface-200 w-full"></div>
+    </div>
+    <div class="col-12 flex flex-column gap-3">
+      <label for="keluhan-utama"
+        >Keluhan Utama <span class="text-red-600">*</span></label
+      >
+      <input
+        pInputText
+        id="keluhan-utama"
+        [readOnly]="true"
+        formControlName="keluhan_utama"
+      />
+    </div>
+    <div class="col-12 flex flex-column gap-3">
+      <label for="riwayat-penyakit"
+        >Riwayat Penyakit/Pemberian Obat
+        <span class="text-gray-600">(Opsional)</span></label
+      >
+      <p-editor
+        [style]="{ height: '220px' }"
+        id="riwayat-penyakit"
+        [(ngModel)]="riwayat_penyakit_obat_opsional_text"
+        [readonly]="true"
+        [ngModelOptions]="{ standalone: true }"
+      >
+        <ng-template pTemplate="header">
+          <span class="ql-formats">
+            <select class="ql-size mr-3">
+              <option value="small"></option>
+              <!-- Note a missing, thus falsy value, is used to reset to default -->
+              <option selected></option>
+              <option value="large"></option>
+              <option value="huge"></option>
+            </select>
+            <button type="button" class="ql-bold" aria-label="Bold"></button>
+            <button
+              type="button"
+              class="ql-italic"
+              aria-label="Italic"
+            ></button>
+            <button
+              type="button"
+              class="ql-underline"
+              aria-label="Underline"
+            ></button>
+            <button class="ql-list ml-3" value="ordered"></button>
+            <button class="ql-list" value="bullet"></button>
+          </span>
+        </ng-template>
+      </p-editor>
+    </div>
+    <!-- Keluhan Pasien -->
+
+    <!-- Diagnosis Sementara -->
+    <div class="col-12 mt-3">
+      <h3>Penilaian/Diagnosis Sementara</h3>
+      <div class="surface-200 w-full"></div>
+    </div>
+    <div class="col-12 flex flex-column gap-3">
+      <label for="diagnosa"
+        >Diagnosa Penyakit <span class="text-red-600">*</span></label
+      >
+      <input
+        pInputText
+        id="diagnosa"
+        [readOnly]="true"
+        formControlName="diagnosa_penyakit"
+      />
+    </div>
+    <div class="col-12 flex flex-column gap-3">
+      <label for="rencana-tindakan"
+        >Rencana Tindakan <span class="text-gray-600">(Opsional)</span></label
+      >
+      <p-editor
+        [style]="{ height: '220px' }"
+        id="rencana-tindakan"
+        [(ngModel)]="rencana_tindakan_opsional_text"
+        [readonly]="true"
+        [ngModelOptions]="{ standalone: true }"
+      >
+        <ng-template pTemplate="header">
+          <span class="ql-formats">
+            <select class="ql-size mr-3">
+              <option value="small"></option>
+              <!-- Note a missing, thus falsy value, is used to reset to default -->
+              <option selected></option>
+              <option value="large"></option>
+              <option value="huge"></option>
+            </select>
+            <button type="button" class="ql-bold" aria-label="Bold"></button>
+            <button
+              type="button"
+              class="ql-italic"
+              aria-label="Italic"
+            ></button>
+            <button
+              type="button"
+              class="ql-underline"
+              aria-label="Underline"
+            ></button>
+            <button class="ql-list ml-3" value="ordered"></button>
+            <button class="ql-list" value="bullet"></button>
+          </span>
+        </ng-template>
+      </p-editor>
+    </div>
+    <!-- Diagnosis Sementara -->
+
+    <!-- Pemeriksaan Fisik -->
+    <div class="col-12 mt-3">
+      <h3>Pemeriksaan Fisik (Opsional)</h3>
+      <div class="surface-200 w-full"></div>
+    </div>
+
+    <!-- Row Pertama -->
+    <div class="col-12 grid">
+      <div class="flex flex-column gap-2 col-4">
+        <label for="tekanan-darah">Tekanan Darah </label>
+        <p-inputGroup>
+          <p-inputNumber
+            [readonly]="true"
+            formControlName="tekanan_darah"
+            inputId="integeronly"
+            id="tekanan-darah"
+            [useGrouping]="false"
+          />
+          <p-inputGroupAddon>/Menit</p-inputGroupAddon>
+        </p-inputGroup>
+      </div>
+      <div class="flex flex-column gap-2 col-4">
+        <label for="denyut-nadi">Denyut Nadi </label>
+        <p-inputGroup>
+          <p-inputNumber
+            [readonly]="true"
+            inputId="integeronly"
+            id="denyut-nadi"
+            [useGrouping]="false"
+            formControlName="denyut_nadi"
+          />
+          <p-inputGroupAddon>/Menit</p-inputGroupAddon>
+        </p-inputGroup>
+      </div>
+      <div class="flex flex-column gap-2 col-4">
+        <label for="pernapasan">Pernapasan </label>
+        <p-inputGroup>
+          <p-inputNumber
+            [readonly]="true"
+            inputId="integeronly"
+            id="pernapasan"
+            [useGrouping]="false"
+            formControlName="pernapasan"
+          />
+          <p-inputGroupAddon>/Menit</p-inputGroupAddon>
+        </p-inputGroup>
+      </div>
+    </div>
+    <!-- Row Pertama -->
+
+    <!-- Row Kedua -->
+    <div class="col-12 grid">
+      <div class="flex flex-column gap-2 col-4">
+        <label for="suhu-tubuh">Suhu Tubuh </label>
+        <p-inputGroup>
+          <p-inputNumber
+            [readonly]="true"
+            inputId="integeronly"
+            id="suhu-tubuh"
+            [useGrouping]="false"
+            formControlName="suhu_tubuh"
+          />
+          <p-inputGroupAddon>C°</p-inputGroupAddon>
+        </p-inputGroup>
+      </div>
+      <div class="flex flex-column gap-2 col-4">
+        <label for="tinggi-badan">Tinggi Badan </label>
+        <p-inputGroup>
+          <p-inputNumber
+            [readonly]="true"
+            inputId="integeronly"
+            id="tinggi-badan"
+            [useGrouping]="false"
+            formControlName="tinggi_badan"
+          />
+          <p-inputGroupAddon>Cm</p-inputGroupAddon>
+        </p-inputGroup>
+      </div>
+      <div class="flex flex-column gap-2 col-4">
+        <label for="berat-badan">Berat Badan </label>
+        <p-inputGroup>
+          <p-inputNumber
+            [readonly]="true"
+            inputId="integeronly"
+            id="berat-badan"
+            [useGrouping]="false"
+            formControlName="berat_badan"
+          />
+          <p-inputGroupAddon>Kg</p-inputGroupAddon>
+        </p-inputGroup>
+      </div>
+    </div>
+    <!-- Row Kedua -->
+
+    <!-- Row Ketiga -->
+    <div class="col-12 flex flex-column gap-3">
+      <label for="pemeriksaan-fisik-tambahan"
+        >Pemeriksaan Fisik Tambahan
+        <span class="text-gray-600">(Opsional)</span></label
+      >
+      <p-editor
+        [readonly]="true"
+        [style]="{ height: '220px' }"
+        id="pemeriksaan-fisik-tambahan"
+        [(ngModel)]="pemeriksaan_fisik_tambahan_opsional_text"
+        [readonly]="true"
+        [ngModelOptions]="{ standalone: true }"
+      >
+        <ng-template pTemplate="header">
+          <span class="ql-formats">
+            <select class="ql-size mr-3">
+              <option value="small"></option>
+              <!-- Note a missing, thus falsy value, is used to reset to default -->
+              <option selected></option>
+              <option value="large"></option>
+              <option value="huge"></option>
+            </select>
+            <button type="button" class="ql-bold" aria-label="Bold"></button>
+            <button
+              type="button"
+              class="ql-italic"
+              aria-label="Italic"
+            ></button>
+            <button
+              type="button"
+              class="ql-underline"
+              aria-label="Underline"
+            ></button>
+            <button class="ql-list ml-3" value="ordered"></button>
+            <button class="ql-list" value="bullet"></button>
+          </span>
+        </ng-template>
+      </p-editor>
+    </div>
+    <!-- Row Ketiga -->
+    <!-- Pemeriksaan Fisik -->
+
+    <!-- Penanggung Jawab Pelayanan -->
+    <div class="col-12 flex flex-column gap-3">
+      <label for="penanggung-jawab"
+        >Nama Dokter <span class="text-red-600">*</span></label
+      >
+      <input
+        pInputText
+        [readOnly]="true"
+        id="penanggung-jawab"
+        formControlName="nama_dokter"
+      />
+    </div>
+    <!-- Penanggung Jawab Pelayanan -->
+
+    <div class="col-12">
+      <div class="flex justify-content-end gap-2">
+        <p-button
+          label="Cancel"
+          severity="secondary"
+          (onClick)="isModalDetailRemdis = false"
+        />
+      </div>
+    </div>
+  </form>
+</p-dialog>
+<!-- Modal View Detail Remdis -->

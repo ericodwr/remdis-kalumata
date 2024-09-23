@@ -1,0 +1,139 @@
+<div class="m-4">
+  <h2>Data Pelayanan Poli</h2>
+  <div class="flex justify-content-between align-items-center">
+    <p>Pantau dan kelola seluruh data pelayanan poli</p>
+    <app-button label="Buat Poli Baru" routerLink="/poli/create"> </app-button>
+  </div>
+  <div class="surface-200 w-full divider mt-2"></div>
+
+  <div>
+    <p-table
+      #dt1
+      [value]="poliData"
+      dataKey="id"
+      [rows]="10"
+      [paginator]="true"
+      styleClass="p-datatable-gridlines"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      [showCurrentPageReport]="true"
+      [globalFilterFields]="['nama', 'id']"
+      scrollable="true"
+    >
+      <!-- Caption -->
+      <ng-template pTemplate="caption">
+        <div class="flex justify-content-between">
+          <span class="p-input-icon-left">
+            <p-columnFilter
+              type="text"
+              field="nama"
+              placeholder="Search by name"
+              ariaLabel="Filter Name"
+              showMenu="false"
+            />
+          </span>
+        </div>
+      </ng-template>
+      <!-- Caption -->
+
+      <!-- Header -->
+      <ng-template pTemplate="header">
+        <tr>
+          <th>
+            <div class="flex align-items-center gap-2">No.</div>
+          </th>
+          <th pSortableColumn="nama">
+            <div class="flex align-items-center">
+              Pelayanan
+              <p-sortIcon field="nama" />
+            </div>
+          </th>
+          <th pSortableColumn="username">
+            <div class="flex align-items-center">
+              Username
+              <p-sortIcon field="username" />
+            </div>
+          </th>
+          <th>
+            <div class="flex align-items-center">Dibuat Pada</div>
+          </th>
+          <th pSortableColumn="updatedAt">
+            <div class="flex align-items-center">
+              Jumlah Kunjungan
+              <p-sortIcon field="updatedAt" />
+            </div>
+          </th>
+          <th>
+            <div class="flex align-items-center">Action</div>
+          </th>
+        </tr>
+      </ng-template>
+      <!-- Header -->
+
+      <!-- Body -->
+      <ng-template pTemplate="body" let-poli let-rowIndex="rowIndex">
+        <tr>
+          <td>{{ rowIndex + 1 }}.</td>
+          <td>
+            {{ poli.nama }}
+          </td>
+          <td>
+            {{ poli.username }}
+          </td>
+          <td>
+            {{ poli.createdAt | date : "dd/MM/yyyy" }}
+          </td>
+          <td>129</td>
+          <td>
+            <p-button
+              icon="pi pi-pencil"
+              class="mr-2"
+              [rounded]="true"
+              [outlined]="true"
+              severity="success"
+            />
+            <!-- (onClick)="editProduct(product)" -->
+            <p-button
+              icon="pi pi-trash"
+              severity="danger"
+              [rounded]="true"
+              [outlined]="true"
+              (onClick)="onDeleteModal(poli.id)"
+            />
+          </td>
+        </tr>
+      </ng-template>
+
+      <!-- Body -->
+    </p-table>
+  </div>
+</div>
+
+<!-- Pop Up Delete Poli -->
+<p-dialog
+  header="Hapus Poli"
+  [(visible)]="isModalDelete"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div>
+    <p>Apakah anda yakin ingin menghapus Poli ini?</p>
+  </div>
+  <div class="flex justify-content-end gap-3 mt-4">
+    <app-button
+      label="Tambah Data Pasien"
+      classBtn="p-button-secondary"
+      (clickChange)="isModalDelete = false"
+    >
+    </app-button>
+    <app-button
+      label="Hapus Poli"
+      classBtn="p-button-danger"
+      (clickChange)="deletePoli()"
+      [loading]="loadingDelete"
+    >
+    </app-button>
+  </div>
+</p-dialog>
+<!-- Pop Up Delete Poli -->

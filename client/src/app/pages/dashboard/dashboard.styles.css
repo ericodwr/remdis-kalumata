@@ -1,0 +1,7 @@
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  color: white;
+}
+
+::ng-deep .p-dropdown-label {
+  font-weight: bolder;
+}

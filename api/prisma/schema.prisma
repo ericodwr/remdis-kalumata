@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model roles {
+  id        String   @id @default(uuid())
+  nama      String   @unique @db.Char(100)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  users     users[]
+}
+
+model users {
+  id          String        @id @default(uuid())
+  username    String        @unique @db.Char(255)
+  nama        String        @unique @db.Char(255)
+  password    String        @db.Text
+  token       String?       @db.Text
+  role        roles         @relation(fields: [roleId], references: [id])
+  roleId      String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @default(now())
+  rekam_medis rekam_medis[]
+}
+
+model pasien {
+  id            String        @id @default(uuid())
+  nama          String        @db.Char(255)
+  NIK           String        @unique @db.Char(16)
+  pekerjaan     String        @db.Char(255)
+  no_telp       String        @unique @db.Char(20)
+  usia          Int           @db.Int()
+  agama         String        @db.Char(255)
+  jenis_kelamin String        @db.Char(255)
+  alamat        String        @db.Text
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @default(now())
+  createdBy     String
+  rekam_medis   rekam_medis[]
+}
+
+model rekam_medis {
+  id                                  String   @id @default(uuid())
+  pasien                              pasien   @relation(fields: [pasienId], references: [id])
+  pasienId                            String
+  user                                users    @relation(fields: [userId], references: [id])
+  userId                              String
+  keluhan_utama                       String   @db.Text
+  riwayat_penyakit_obat_opsional      String?  @db.Text
+  diagnosa_penyakit                   String   @db.Text
+  rencana_tindakan_opsional           String?  @db.Text
+  tekanan_darah                       Int?     @db.Int
+  denyut_nadi                         Int?     @db.Int
+  pernapasan                          Int?     @db.Int
+  suhu_tubuh                          Int?     @db.Int
+  tinggi_badan                        Int?     @db.Int
+  berat_badan                         Int?     @db.Int
+  pemeriksaan_fisik_tambahan_opsional String?  @db.Text
+  nama_dokter                         String   @db.Char(255)
+  createdAt                           DateTime @default(now())
+  updatedAt                           DateTime @default(now())
+}
