@@ -55,38 +55,207 @@ export class DashboardComponent implements OnInit {
     this.currentDate.getTime() - 365 * 24 * 60 * 60 * 1000
   );
 
+  // Chart Preferences
+  documentStyle = getComputedStyle(document.documentElement);
+  textColor = this.documentStyle.getPropertyValue('--text-color');
+  textColorSecondary = this.documentStyle.getPropertyValue(
+    '--text-color-secondary'
+  );
+  surfaceBorder = this.documentStyle.getPropertyValue('--surface-border');
   data: any;
-
   options: any;
+  // Chart Preferences
 
   dateDropdown: DateData[] = [
     {
-      name: `7 hari Terakhir (${this.lastWeekDate.toLocaleDateString()} - ${this.currentDate.toLocaleDateString()})`,
+      name: `7 hari Terakhir (${this.lastWeekDate.toLocaleDateString(
+        'id-ID'
+      )} - ${this.currentDate.toLocaleDateString('id-ID')})`,
       value: this.lastWeekDate,
     },
     {
-      name: `30 hari Terakhir (${this.lastMonthDate.toLocaleDateString()} - ${this.currentDate.toLocaleDateString()})`,
+      name: `30 hari Terakhir (${this.lastMonthDate.toLocaleDateString(
+        'id-ID'
+      )} - ${this.currentDate.toLocaleDateString('id-ID')})`,
       value: this.lastMonthDate,
     },
     {
-      name: `6 Bulan Terakhir (${this.last6MonthDate.toLocaleDateString()} - ${this.currentDate.toLocaleDateString()})`,
+      name: `6 Bulan Terakhir (${this.last6MonthDate.toLocaleDateString(
+        'id-ID',
+        {
+          month: 'short',
+          year: 'numeric',
+        }
+      )} - ${this.currentDate.toLocaleDateString('id-ID', {
+        month: 'short',
+        year: 'numeric',
+      })})`,
       value: this.last6MonthDate,
     },
     {
-      name: `12 Bulan Terakhir (${this.lastYearDate.toLocaleDateString()} - ${this.currentDate.toLocaleDateString()})`,
+      name: `12 Bulan Terakhir (${this.lastYearDate.toLocaleDateString(
+        'id-ID',
+        {
+          month: 'short',
+          year: 'numeric',
+        }
+      )} - ${this.currentDate.toLocaleDateString('id-ID', {
+        month: 'short',
+        year: 'numeric',
+      })})`,
       value: this.lastYearDate,
     },
   ];
 
-  selectedDateDrpdown: DateData = this.dateDropdown[0];
+  selectedDateDrpdown: DateData = this.dateDropdown[1];
 
-  checkData() {
-    console.log(this.selectedDateDrpdown.value.toLocaleDateString());
+  filteringDataByDatetime(dataApi: any, time: string) {
+    const mappingData: any[] = [];
+    if (time == '7') {
+      for (let i = 0; i < 7; i++) {
+        const dataFilter = dataApi.data.filter(
+          (d: any) =>
+            new Date(d.createdAt).toLocaleDateString() ==
+            new Date(
+              this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+            ).toLocaleDateString()
+        );
+
+        mappingData.push({
+          data: dataFilter,
+          label:
+            this.weekday[
+              new Date(
+                this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+              ).getUTCDay()
+            ],
+        });
+      }
+      this.data = {
+        labels: mappingData.map((d) => d.label).reverse(),
+        datasets: [
+          {
+            label: 'Kunjungan Pasien',
+            fill: false,
+            borderColor: this.documentStyle.getPropertyValue('--green-500'),
+            // yAxisID: 'y',
+            tension: 0.4,
+            data: mappingData.map((d) => d.data.length).reverse(),
+          },
+        ],
+      };
+    } else if (time == '30') {
+      for (let i = 0; i <= 30; i += 6) {
+        const dataFilter = dataApi.data.filter((d: any) => {
+          return (
+            new Date(d.createdAt) <
+              new Date(this.currentDate.getTime() - i * 24 * 60 * 60 * 1000) &&
+            new Date(d.createdAt) >=
+              new Date(
+                this.currentDate.getTime() - (i + 6) * 24 * 60 * 60 * 1000
+              )
+          );
+        });
+
+        mappingData.push({
+          data: dataFilter,
+          label: new Date(
+            this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+          ).toLocaleDateString('id-ID'),
+        });
+      }
+      this.data = {
+        labels: mappingData.map((d) => d.label).reverse(),
+        datasets: [
+          {
+            label: 'Kunjungan Pasien',
+            fill: false,
+            borderColor: this.documentStyle.getPropertyValue('--green-500'),
+            // yAxisID: 'y',
+            tension: 0.4,
+            data: mappingData.map((d) => d.data.length).reverse(),
+          },
+        ],
+      };
+    } else if (time == '6') {
+      for (let i = 0; i <= 180; i += 30) {
+        const dataFilter = dataApi.data.filter(
+          (d: any) =>
+            new Date(d.createdAt).getUTCMonth() ==
+            new Date(
+              this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+            ).getUTCMonth()
+        );
+
+        mappingData.push({
+          data: dataFilter,
+          label: new Date(
+            this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+          ).toLocaleString('default', { month: 'long' }),
+        });
+      }
+
+      this.data = {
+        labels: mappingData.map((d) => d.label).reverse(),
+        datasets: [
+          {
+            label: 'Kunjungan Pasien',
+            fill: false,
+            borderColor: this.documentStyle.getPropertyValue('--green-500'),
+            // yAxisID: 'y',
+            tension: 0.4,
+            data: mappingData.map((d) => d.data.length).reverse(),
+          },
+        ],
+      };
+    } else if (time == '12') {
+      for (let i = 0; i < 365; i += 30) {
+        const dataFilter = dataApi.data.filter(
+          (d: any) =>
+            new Date(d.createdAt).getUTCMonth() ==
+            new Date(
+              this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+            ).getUTCMonth()
+        );
+        mappingData.push({
+          data: dataFilter,
+          label: new Date(
+            this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+          ).toLocaleString('default', { month: 'long' }),
+        });
+      }
+      this.data = {
+        labels: mappingData.map((d) => d.label).reverse(),
+        datasets: [
+          {
+            label: 'Kunjungan Pasien',
+            fill: false,
+            borderColor: this.documentStyle.getPropertyValue('--green-500'),
+            // yAxisID: 'y',
+            tension: 0.4,
+            data: mappingData.map((d) => d.data.length).reverse(),
+          },
+        ],
+      };
+    }
   }
 
-  ngOnInit(): void {
-    this.setDataChart();
+  checkData() {
+    const selectedTime = this.selectedDateDrpdown.name.split(' ')[0];
 
+    firstValueFrom(
+      this.patientService.getAllPatientWithFilterDate(
+        this.selectedDateDrpdown.value
+      )
+    )
+      .then((res) => {
+        console.log(res);
+        this.filteringDataByDatetime(res, selectedTime);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  getData() {
     firstValueFrom(this.poliService.getAllPoli())
       .then((res) => {
         res.map((data) => {
@@ -96,77 +265,23 @@ export class DashboardComponent implements OnInit {
       .catch((err) => console.log(err));
 
     firstValueFrom(
-      this.patientService.getAllPatientWithFilterDate(this.lastWeekDate)
+      this.patientService.getAllPatientWithFilterDate(
+        this.dateDropdown[1].value
+      )
     )
       .then((res) => {
-        console.log(res);
-        const mappingData = [];
-        // for (const data of res.currentData) {
-        //   console.log(new Date(data.createdAt).toLocaleDateString());
-
-        // }
-
-        for (let i = 0; i < 7; i++) {
-          console.log(
-            this.weekday[
-              new Date(
-                this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
-              ).getUTCDay()
-            ]
-          );
-          const dataFilter = res.currentData.filter(
-            (d) =>
-              new Date(d.createdAt).toLocaleDateString() ==
-              new Date(
-                this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
-              ).toLocaleDateString()
-          );
-          mappingData.push({
-            data: dataFilter,
-            label:
-              this.weekday[
-                new Date(
-                  this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
-                ).getUTCDay()
-              ],
-          });
-        }
-        console.log(mappingData);
+        this.filteringDataByDatetime(res, '30');
       })
       .catch((err) => console.log(err));
   }
 
+  ngOnInit(): void {
+    this.setDataChart();
+
+    this.getData();
+  }
+
   setDataChart() {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    const textColorSecondary = documentStyle.getPropertyValue(
-      '--text-color-secondary'
-    );
-    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-
-    this.data = {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-      datasets: [
-        {
-          label: 'Dataset 1',
-          fill: false,
-          borderColor: documentStyle.getPropertyValue('--green-500'),
-          // yAxisID: 'y',
-          tension: 0.4,
-          data: [65, 59, 80, 81, 56, 55, 10],
-        },
-        {
-          label: 'Dataset 2',
-          fill: false,
-          borderColor: documentStyle.getPropertyValue('--blue-600'),
-          // yAxisID: 'y1',
-          borderDash: [5, 5],
-          tension: 0.4,
-          data: [28, 48, 40, 19, 86, 27, 90],
-        },
-      ],
-    };
-
     this.options = {
       stacked: false,
       maintainAspectRatio: false,
@@ -174,26 +289,26 @@ export class DashboardComponent implements OnInit {
       plugins: {
         legend: {
           labels: {
-            color: textColor,
+            color: this.textColor,
           },
         },
       },
       scales: {
         x: {
           ticks: {
-            color: textColorSecondary,
+            color: this.textColorSecondary,
           },
           grid: {
-            color: surfaceBorder,
+            color: this.surfaceBorder,
             drawBorder: false,
           },
         },
         y: {
           ticks: {
-            color: textColorSecondary,
+            color: this.textColorSecondary,
           },
           grid: {
-            color: surfaceBorder,
+            color: this.surfaceBorder,
             drawBorder: false,
           },
         },

@@ -23,4 +23,8 @@ export class PoliService {
   deletePoli(id: string): Observable<UpdateResDto> {
     return this.base.delete(`${environment.API_URL}/poli/?id=${id}`);
   }
+
+  editPoli(data: { id: string; nama: string }): Observable<UpdateResDto> {
+    return this.base.patch(`${environment.API_URL}/poli`, data);
+  }
 }

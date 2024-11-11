@@ -1,10 +1,15 @@
-import { Request, Response, NextFunction } from 'express';
-import { create, getAllPoliByRole, remove } from '../services/poliService';
+import { Request, Response, NextFunction } from "express";
+import {
+  create,
+  editName,
+  getAllPoliByRole,
+  remove,
+} from "../services/poliService";
 
 export const getAllPoliUsers = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     const result = await getAllPoliByRole();
@@ -14,13 +19,10 @@ export const getAllPoliUsers = async (
   }
 };
 
-const test =
-  "<p>rencanya sih...</p><p><span class=\"ql-size-huge\">boleh</span></p>";
-
 export const createPoli = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     const result = await create(req.body);
@@ -33,11 +35,24 @@ export const createPoli = async (
 export const removePoli = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     const { id } = req.query;
-    const result = await remove(id?.toString() ? id?.toString() : '');
+    const result = await remove(id?.toString() ? id?.toString() : "");
+    res.status(201).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const editNamePoli = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const result = await editName(req.body);
     res.status(201).json(result);
   } catch (error) {
     next(error);

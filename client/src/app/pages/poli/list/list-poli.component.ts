@@ -7,6 +7,7 @@ import { PoliService } from '../../../services/poli.service';
 import { firstValueFrom } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   templateUrl: './list-poli.component.html',
@@ -17,17 +18,29 @@ export class ListPoliComponent implements OnInit {
   constructor(
     private title: Title,
     private poliService: PoliService,
-    private fb: NonNullableFormBuilder
+    private fb: NonNullableFormBuilder,
+    private authService: AuthService
   ) {
     title.setTitle('List Data Poli');
   }
 
+  get isAdmin() {
+    return this.authService.getProfile()?.role === 'admin';
+  }
+
   loadingDelete = false;
   isModalDelete: boolean = false;
+  isModalEdit: boolean = false;
+  loadingEdit = false;
   poliData: PoliResDto[] = [];
   searchValue = '';
 
   deletePoliForm = this.fb.group({
+    id: ['', Validators.required],
+  });
+
+  editPoliForm = this.fb.group({
+    nama: ['', Validators.required],
     id: ['', Validators.required],
   });
 
@@ -44,6 +57,27 @@ export class ListPoliComponent implements OnInit {
     firstValueFrom(this.poliService.getAllPoli())
       .then((res) => {
         this.poliData = res;
+      })
+      .catch((err) => console.log(err));
+  }
+
+  onEditModal(id: string, nama: string) {
+    this.editPoliForm.setValue({ id, nama });
+    this.isModalEdit = true;
+  }
+
+  cancelEdit() {
+    this.isModalEdit = false;
+    this.editPoliForm.reset();
+  }
+
+  editPoli() {
+    this.loadingEdit = true;
+    firstValueFrom(this.poliService.editPoli(this.editPoliForm.getRawValue()))
+      .then((res) => {
+        this.cancelEdit();
+        this.loadingEdit = false;
+        this.getData();
       })
       .catch((err) => console.log(err));
   }

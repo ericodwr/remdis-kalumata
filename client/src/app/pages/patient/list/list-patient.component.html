@@ -98,10 +98,12 @@
             />
             <!-- (onClick)="editProduct(product)" -->
             <p-button
+              *ngIf="isAdmin"
               icon="pi pi-trash"
               severity="danger"
               [rounded]="true"
               [outlined]="true"
+              (onClick)="onDeleteModal(patient.id)"
             />
             <!-- (onClick)="deleteProduct(product)" -->
           </td>
@@ -115,3 +117,33 @@
     </p-table>
   </div>
 </div>
+
+<!-- Pop Up Delete Patient -->
+<p-dialog
+  header="Hapus Pasien"
+  [(visible)]="isModalDelete"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div>
+    <p>Apakah anda yakin ingin menghapus Pasien ini?</p>
+  </div>
+  <div class="flex justify-content-end gap-3 mt-4">
+    <app-button
+      label="Batal Hapus"
+      classBtn="p-button-secondary"
+      (clickChange)="isModalDelete = false"
+    >
+    </app-button>
+    <app-button
+      label="Hapus Pasien"
+      classBtn="p-button-danger"
+      (clickChange)="deletePatient()"
+      [loading]="loadingDelete"
+    >
+    </app-button>
+  </div>
+</p-dialog>
+<!-- Pop Up Delete Patient -->

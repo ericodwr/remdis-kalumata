@@ -22,6 +22,12 @@ export class PatientRemdisService {
     );
   }
 
+  getPasientAndAllRemdis(id: string | null): Observable<PatientResDto> {
+    return this.base.get(
+      `${environment.API_URL}/patient-remdis-admin/?id=${id}`
+    );
+  }
+
   createPatientRemdis(data: PatientRemdisReqDto): Observable<InsertResDto> {
     return this.base.post(`${environment.API_URL}/patient-remdis`, data);
   }

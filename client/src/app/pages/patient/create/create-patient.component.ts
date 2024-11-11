@@ -1,10 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  NonNullableFormBuilder,
-  Validators,
-} from '@angular/forms';
+import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { PatientRemdisService } from '../../../services/patient-remdis.service';
 import { firstValueFrom } from 'rxjs';
@@ -25,7 +20,6 @@ export class CreatePatientComponent implements OnInit {
 
   loadingButton: boolean = false;
   poliId: string | undefined = this.authService.getProfile()?.id;
-  formGroup!: FormGroup;
   genders: any[] = [
     { name: 'Laki-Laki', key: 'laki-laki' },
     { name: 'Perempuan', key: 'perempuan' },
@@ -41,12 +35,12 @@ export class CreatePatientComponent implements OnInit {
     usia: [0, Validators.required],
     agama: ['', Validators.required],
     jenis_kelamin: ['', Validators.required],
-    createdBy: ['', Validators.required],
+    createdBy: [''],
     alamat: ['', Validators.required],
   });
 
   createRemdisForm = this.fb.group({
-    userId: ['', Validators.required],
+    userId: [''],
     keluhan_utama: ['', Validators.required],
     riwayat_penyakit_obat_opsional: [''],
     diagnosa_penyakit: ['', Validators.required],

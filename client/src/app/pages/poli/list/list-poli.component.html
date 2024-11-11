@@ -2,7 +2,12 @@
   <h2>Data Pelayanan Poli</h2>
   <div class="flex justify-content-between align-items-center">
     <p>Pantau dan kelola seluruh data pelayanan poli</p>
-    <app-button label="Buat Poli Baru" routerLink="/poli/create"> </app-button>
+    <app-button
+      *ngIf="isAdmin"
+      label="Buat Poli Baru"
+      routerLink="/poli/create"
+    >
+    </app-button>
   </div>
   <div class="surface-200 w-full divider mt-2"></div>
 
@@ -62,7 +67,7 @@
               <p-sortIcon field="updatedAt" />
             </div>
           </th>
-          <th>
+          <th *ngIf="isAdmin">
             <div class="flex align-items-center">Action</div>
           </th>
         </tr>
@@ -83,13 +88,14 @@
             {{ poli.createdAt | date : "dd/MM/yyyy" }}
           </td>
           <td>129</td>
-          <td>
+          <td *ngIf="isAdmin">
             <p-button
               icon="pi pi-pencil"
               class="mr-2"
               [rounded]="true"
               [outlined]="true"
               severity="success"
+              (onClick)="onEditModal(poli.id, poli.nama)"
             />
             <!-- (onClick)="editProduct(product)" -->
             <p-button
@@ -137,3 +143,44 @@
   </div>
 </p-dialog>
 <!-- Pop Up Delete Poli -->
+
+<!-- Pop Up Edit Poli -->
+<p-dialog
+  header="Edit Poli"
+  [(visible)]="isModalEdit"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div>
+    <form [formGroup]="editPoliForm">
+      <div class="flex flex-column gap-2">
+        <label for="nama">Nama <span class="text-red-600">*</span></label>
+        <input
+          pInputText
+          id="nama"
+          formControlName="nama"
+          aria-describedby="username-help"
+        />
+      </div>
+    </form>
+  </div>
+  <div class="flex justify-content-end gap-3 mt-4">
+    <app-button
+      label="Batal Edit"
+      classBtn="p-button-secondary"
+      (clickChange)="cancelEdit()"
+    >
+    </app-button>
+    <app-button
+      label="Edit Poli"
+      classBtn="p-button-secondary"
+      (clickChange)="editPoli()"
+      [loading]="loadingEdit"
+      [disabled]="editPoliForm.invalid"
+    >
+    </app-button>
+  </div>
+</p-dialog>
+<!-- Pop Up Edit Poli -->

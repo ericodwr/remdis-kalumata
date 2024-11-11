@@ -391,7 +391,11 @@
       (clickChange)="onCancel()"
     >
     </app-button>
-    <app-button label="Simpan dan Pasien" (clickChange)="onSubmit()">
+    <app-button
+      label="Simpan dan Pasien"
+      (clickChange)="onSubmit()"
+      [disabled]="!createPatientForm.valid || !createRemdisForm.valid"
+    >
     </app-button>
   </div>
 </div>

@@ -1,13 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Event, Router } from '@angular/router';
+import { Event, Router } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { MenuItem } from 'primeng/api';
-import {
-  NavigationStart,
-  NavigationError,
-  NavigationEnd,
-} from '@angular/router';
+import { NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'breadcrumbs',
@@ -23,7 +19,7 @@ export class BreadcrumbsComponent implements OnInit {
 
   currentRoute: string | undefined;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private router: Router) {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
         //do something on end activity

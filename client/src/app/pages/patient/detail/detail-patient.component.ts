@@ -6,6 +6,7 @@ import { AuthService } from '../../../services/auth.service';
 import { PatientRemdisService } from '../../../services/patient-remdis.service';
 import { RekamMedisResDto } from '../../../dto/remdis/RemdisResDto';
 import { RemdisService } from '../../../services/remdis.service';
+import { PatientService } from '../../../services/patient.service';
 
 @Component({
   selector: 'detail-patient',
@@ -18,8 +19,13 @@ export class DetailPatientComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private patientRemdisService: PatientRemdisService,
-    private remdisService: RemdisService
+    private remdisService: RemdisService,
+    private patientService: PatientService
   ) {}
+
+  get isAdmin() {
+    return this.authService.getProfile()?.role === 'admin';
+  }
 
   poliId: string | undefined = this.authService.getProfile()?.id;
   patientId: string | null = '';
@@ -47,7 +53,7 @@ export class DetailPatientComponent implements OnInit {
     usia: [0, Validators.required],
     agama: ['', Validators.required],
     jenis_kelamin: ['', Validators.required],
-    createdBy: ['', Validators.required],
+    // createdBy: ['', Validators.required],
     alamat: ['', Validators.required],
   });
 
@@ -89,32 +95,76 @@ export class DetailPatientComponent implements OnInit {
     this.getData();
   }
 
+  cancelEdit() {
+    this.getData();
+    this.isEdited = false;
+  }
+
+  saveEdit() {
+    firstValueFrom(this.activatedRoute.paramMap)
+      .then((res) => {
+        firstValueFrom(
+          this.patientService.updatePatient({
+            ...this.patientForm.getRawValue(),
+            id: res.get('id'),
+          })
+        )
+          .then((res) => {
+            this.getData();
+            this.isEdited = false;
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  }
+
   getData() {
     firstValueFrom(this.activatedRoute.paramMap)
       .then((res) => {
         this.patientId = res.get('id');
 
-        firstValueFrom(
-          this.patientRemdisService.getPasientAndRemdisByPoli(
-            res.get('id'),
-            this.poliId
+        if (this.authService.getProfile()?.role === 'admin') {
+          firstValueFrom(
+            this.patientRemdisService.getPasientAndAllRemdis(this.patientId)
           )
-        )
-          .then((res) => {
-            console.log(res);
+            .then((res) => {
+              this.patientForm.get('nama')?.setValue(res.nama);
+              this.patientForm.get('NIK')?.setValue(res.NIK);
+              this.patientForm.get('pekerjaan')?.setValue(res.pekerjaan);
+              this.patientForm.get('agama')?.setValue(res.agama);
+              this.patientForm.get('no_telp')?.setValue(res.no_telp);
+              this.patientForm.get('usia')?.setValue(res.usia);
+              this.patientForm
+                .get('jenis_kelamin')
+                ?.setValue(res.jenis_kelamin);
+              this.patientForm.get('alamat')?.setValue(res.alamat);
 
-            this.patientForm.get('nama')?.setValue(res.nama);
-            this.patientForm.get('NIK')?.setValue(res.NIK);
-            this.patientForm.get('pekerjaan')?.setValue(res.pekerjaan);
-            this.patientForm.get('agama')?.setValue(res.agama);
-            this.patientForm.get('no_telp')?.setValue(res.no_telp);
-            this.patientForm.get('usia')?.setValue(res.usia);
-            this.patientForm.get('jenis_kelamin')?.setValue(res.jenis_kelamin);
-            this.patientForm.get('alamat')?.setValue(res.alamat);
+              this.remdis = res.rekam_medis;
+            })
+            .catch((err) => console.log(err));
+        } else {
+          firstValueFrom(
+            this.patientRemdisService.getPasientAndRemdisByPoli(
+              res.get('id'),
+              this.poliId
+            )
+          )
+            .then((res) => {
+              this.patientForm.get('nama')?.setValue(res.nama);
+              this.patientForm.get('NIK')?.setValue(res.NIK);
+              this.patientForm.get('pekerjaan')?.setValue(res.pekerjaan);
+              this.patientForm.get('agama')?.setValue(res.agama);
+              this.patientForm.get('no_telp')?.setValue(res.no_telp);
+              this.patientForm.get('usia')?.setValue(res.usia);
+              this.patientForm
+                .get('jenis_kelamin')
+                ?.setValue(res.jenis_kelamin);
+              this.patientForm.get('alamat')?.setValue(res.alamat);
 
-            this.remdis = res.rekam_medis;
-          })
-          .catch((err) => console.log(err));
+              this.remdis = res.rekam_medis;
+            })
+            .catch((err) => console.log(err));
+        }
       })
       .catch((err) => console.log(err));
   }

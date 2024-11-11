@@ -1,9 +1,9 @@
-import { prisma } from '../application/database';
-import { CreatePatient } from '../types/pasien';
+import { prisma } from "../application/database";
+import { CreatePatient, EditPatient } from "../types/pasien";
 import {
   CreateRekamMedis,
   CreateRekamMedisWithPatient,
-} from '../types/rekam_medis';
+} from "../types/rekam_medis";
 
 type CreatePatientRemdis = {
   patient: CreatePatient;
@@ -16,9 +16,37 @@ export const create = async (data: CreatePatient) => {
   });
 
   return {
-    message: 'Create Patient Successfully!',
+    message: "Create Patient Successfully!",
     data: newPatient,
   };
+};
+
+export const edit = async (data: EditPatient) => {
+  const updatePatient = await prisma.pasien.update({
+    where: {
+      id: data.id,
+    },
+    data,
+  });
+
+  return {
+    message: "Update patient Successfully!",
+    data: updatePatient,
+  };
+};
+
+export const remove = async (id: string) => {
+  const deletePatient = prisma.pasien.delete({
+    where: { id },
+  });
+
+  const deleteRemdis = prisma.rekam_medis.deleteMany({
+    where: { pasienId: id },
+  });
+
+  await prisma.$transaction([deleteRemdis, deletePatient]);
+
+  return { message: "Delete Patient Successfully!" };
 };
 
 export const getAll = async () => {
@@ -29,7 +57,7 @@ export const getAll = async () => {
           createdAt: true,
         },
         orderBy: {
-          createdAt: 'desc',
+          createdAt: "desc",
         },
       },
     },
@@ -40,19 +68,8 @@ export const getAll = async () => {
 
 export const getPatientAndRemdisByPoli = async (
   id: string | undefined,
-  poliId: string | undefined,
+  poliId: string | undefined
 ) => {
-  // const allPatient = await prisma.pasien.findMany({
-  //   // where: {
-  //   //   createdBy: id,
-  //   // },
-  //   include: {
-  //     rekam_medis: {
-  //       where: { userId: id },
-  //     },
-  //   },
-  // });
-
   const patient = await prisma.pasien.findUnique({
     where: {
       id,
@@ -63,7 +80,31 @@ export const getPatientAndRemdisByPoli = async (
           userId: poliId,
         },
         orderBy: {
-          createdAt: 'desc',
+          createdAt: "desc",
+        },
+        include: {
+          user: {
+            select: {
+              nama: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return patient;
+};
+
+export const getPatientAndAllRemdis = async (id: string | undefined) => {
+  const patient = await prisma.pasien.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      rekam_medis: {
+        orderBy: {
+          createdAt: "desc",
         },
         include: {
           user: {
@@ -93,7 +134,7 @@ export const createPatientRemdis = async (data: CreatePatientRemdis) => {
     },
   });
 
-  return { message: 'Patient created successfully!' };
+  return { message: "Patient created successfully!" };
 };
 
 export const getPatientWithFilterDate = async (data: any) => {
@@ -110,19 +151,19 @@ export const getPatientWithFilterDate = async (data: any) => {
     },
   });
 
-  const previousData = new Date(prevDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+  // const previousData = new Date(prevDate.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-  const prevPatients = await prisma.pasien.findMany({
-    where: {
-      createdAt: {
-        gte: previousData,
-        lte: prevDate,
-      },
-    },
-  });
+  // const prevPatients = await prisma.pasien.findMany({
+  //   where: {
+  //     createdAt: {
+  //       gte: previousData,
+  //       lte: prevDate,
+  //     },
+  //   },
+  // });
 
   return {
-    currentData: patients,
-    prevData: prevPatients,
+    data: patients,
+    // prevData: prevPatients,
   };
 };

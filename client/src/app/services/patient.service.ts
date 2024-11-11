@@ -7,6 +7,8 @@ import {
   PatientResDto,
   PatientWithFilterDate,
 } from '../dto/patient/PatientResDto';
+import { UpdatePatientReqDto } from '../dto/patient/UpdatePatientReqDto';
+import { InsertResDto } from '../dto/InsertResDto';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +20,14 @@ export class PatientService {
 
   getAllPatient(): Observable<PatientResDto[]> {
     return this.base.get(`${environment.API_URL}/patient`);
+  }
+
+  updatePatient(data: UpdatePatientReqDto): Observable<InsertResDto> {
+    return this.base.patch(`${environment.API_URL}/patient`, data);
+  }
+
+  deletePatient(id: string): Observable<InsertResDto> {
+    return this.base.delete(`${environment.API_URL}/patient/?id=${id}`);
   }
 
   getAllPatientWithFilterDate(
