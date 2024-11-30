@@ -20,7 +20,7 @@ const PORT = process.env.PORT;
 web_1.web.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield database_1.prisma.$connect();
-        console.log('Server running at: ' + PORT);
+        console.log("Server running at: " + PORT);
     }
     catch (error) {
         yield database_1.prisma.$disconnect();

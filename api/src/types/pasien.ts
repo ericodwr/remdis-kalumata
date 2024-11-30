@@ -6,7 +6,7 @@ export interface CreatePatient {
   usia: number;
   agama: string;
   alamat: string;
-  jenis_kelamin: "laki-laki" | "perempuan";
+  jenis_kelamin: string;
   createdBy: string;
 }
 

@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const response_error_1 = __importDefault(require("../error/response-error"));
 exports.default = (req, res, next) => {
-    if (req.url === '/user/login') {
+    if (req.url === '/login') {
         return next();
     }
     let token = req.headers['x-access-token'] || req.headers['authorization'];

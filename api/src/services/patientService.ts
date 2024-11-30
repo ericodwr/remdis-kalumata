@@ -1,5 +1,5 @@
 import { prisma } from "../application/database";
-import { CreatePatient, EditPatient } from "../types/pasien";
+import { CreatePatient, EditPatient, Patient } from "../types/pasien";
 import {
   CreateRekamMedis,
   CreateRekamMedisWithPatient,
@@ -9,6 +9,12 @@ type CreatePatientRemdis = {
   patient: CreatePatient;
   remdis: CreateRekamMedisWithPatient;
 };
+
+interface VisitorType {
+  rekam_medis: {
+    createdAt: Date;
+  };
+}
 
 export const create = async (data: CreatePatient) => {
   const newPatient = await prisma.pasien.create({
@@ -137,33 +143,96 @@ export const createPatientRemdis = async (data: CreatePatientRemdis) => {
   return { message: "Patient created successfully!" };
 };
 
-export const getPatientWithFilterDate = async (data: any) => {
+export const getPatientWithFilterDate = async (date: any, createdBy: any) => {
   const currentDate = new Date();
+  const prevDate = new Date(date);
 
-  const prevDate = new Date(data);
+  let patients: Patient[];
+  let visitors: any[];
 
-  const patients = await prisma.pasien.findMany({
-    where: {
-      createdAt: {
-        gte: prevDate,
-        lte: currentDate,
+  // Filtered by poli
+  if (createdBy == "") {
+    patients = await prisma.pasien.findMany({
+      where: {
+        createdAt: {
+          gte: prevDate,
+          lte: currentDate,
+        },
       },
-    },
-  });
+    });
 
-  // const previousData = new Date(prevDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+    visitors = await prisma.pasien.findMany({
+      where: {
+        rekam_medis: {
+          some: {
+            createdAt: {
+              gte: prevDate,
+              lte: currentDate,
+            },
+          },
+        },
+      },
+      select: {
+        rekam_medis: {
+          select: { createdAt: true },
+          where: {
+            createdAt: {
+              gte: prevDate,
+              lte: currentDate,
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+      },
+    });
+    return {
+      patients,
+      visitors,
+    };
+    // Filtered by poli
+  } else {
+    patients = await prisma.pasien.findMany({
+      where: {
+        createdAt: {
+          gte: prevDate,
+          lte: currentDate,
+        },
+        createdBy,
+      },
+    });
 
-  // const prevPatients = await prisma.pasien.findMany({
-  //   where: {
-  //     createdAt: {
-  //       gte: previousData,
-  //       lte: prevDate,
-  //     },
-  //   },
-  // });
-
-  return {
-    data: patients,
-    // prevData: prevPatients,
-  };
+    visitors = await prisma.pasien.findMany({
+      where: {
+        rekam_medis: {
+          some: {
+            createdAt: {
+              gte: prevDate,
+              lte: currentDate,
+            },
+          },
+        },
+        createdBy,
+      },
+      select: {
+        rekam_medis: {
+          select: { createdAt: true },
+          where: {
+            createdAt: {
+              gte: prevDate,
+              lte: currentDate,
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+      },
+    });
+    return {
+      patients,
+      visitors,
+    };
+  }
 };

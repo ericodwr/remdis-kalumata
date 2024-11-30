@@ -76,6 +76,7 @@ const login = (data) => __awaiter(void 0, void 0, void 0, function* () {
         }),
     ]);
     return {
+        id: newUser.id,
         username: newUser.username,
         nama: newUser.nama,
         token: newUser.token,

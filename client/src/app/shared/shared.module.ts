@@ -33,6 +33,7 @@ import { EditorModule } from 'primeng/editor';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { TabViewModule } from 'primeng/tabview';
+import { TabMenuModule } from 'primeng/tabmenu';
 
 @NgModule({
   imports: [
@@ -69,7 +70,8 @@ import { TabViewModule } from 'primeng/tabview';
     EditorModule,
     InputGroupModule,
     InputGroupAddonModule,
-    TabViewModule
+    TabViewModule,
+    TabMenuModule,
   ],
   exports: [
     MenubarModule,
@@ -105,7 +107,8 @@ import { TabViewModule } from 'primeng/tabview';
     EditorModule,
     InputGroupModule,
     InputGroupAddonModule,
-    TabViewModule
+    TabViewModule,
+    TabMenuModule,
   ],
 })
 export class SharedModule {}

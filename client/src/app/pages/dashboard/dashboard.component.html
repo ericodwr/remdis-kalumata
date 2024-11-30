@@ -8,7 +8,9 @@
   <div class="bg-white p-4 mt-4">
     <div class="flex flex-column gap-3">
       <h3>Grafik Total Pasien</h3>
-      <div class="flex flex-row justify-content-between align-items-center gap-6">
+      <div
+        class="flex flex-row justify-content-between align-items-center gap-6"
+      >
         <p>
           Analisis jumlah pasien berdasarkan periode waktu yang dipilih (Hari
           Ini, Kemarin, 7 Hari Terakhir, 30 Hari Terakhir)
@@ -19,13 +21,13 @@
           [(ngModel)]="selectedDateDrpdown"
           optionLabel="name"
           placeholder="Select Date"
-          (onChange)="checkData()"
+          (onChange)="onDateChange()"
         />
       </div>
     </div>
 
     <div class="mt-4">
-      <p-tabView>
+      <p-tabView (onChange)="onTabChange($event.index)">
         <p-tabPanel *ngFor="let tab of tabs" [header]="tab.title">
           <div class="mt-4">
             <p>
@@ -33,21 +35,28 @@
             </p>
             <div class="mt-4 flex flex-row gap-4">
               <div
-                class="flex flex-column gap-3 shadow-3 border-round- border-1 border-gray-400 xl p-4"
+                class="flex flex-column gap-3 shadow-3 border-round border-1 cursor-pointer xl p-4 {{
+                  selectedFilter === 'patients'
+                    ? 'border-primary surface-100'
+                    : 'border-gray-400'
+                }}"
+                (click)="changeSelectedFilter('patients')"
               >
                 <h4>Total Pasien</h4>
-                <p>32</p>
-                <p>+10% dari 7 hari sebelumnya</p>
+                <p>{{ totalPatients }}</p>
               </div>
               <div
-                class="flex flex-column gap-3 shadow-3 border-round- border-1 border-gray-400 xl p-4"
+                class="flex flex-column gap-3 shadow-3 border-round border-1 cursor-pointer xl p-4 {{
+                  selectedFilter === 'visitors'
+                    ? 'border-primary surface-100'
+                    : 'border-gray-400'
+                }}"
+                (click)="changeSelectedFilter('visitors')"
               >
                 <h4>Total Kunjungan</h4>
-                <p>64</p>
-                <p>+10% dari 7 hari sebelumnya</p>
+                <p>{{ totalVisitors }}</p>
               </div>
             </div>
-
             <div class="mt-4">
               <p-chart type="line" [data]="data" [options]="options" />
             </div>

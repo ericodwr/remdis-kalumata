@@ -115,7 +115,8 @@ export const getAllPatientWithFilterDate = async (
   next: NextFunction
 ) => {
   try {
-    const result = await getPatientWithFilterDate(req.query.prevDate);
+    const { prevDate, createdBy } = req.query;
+    const result = await getPatientWithFilterDate(prevDate, createdBy);
     res.json(result);
   } catch (error) {
     next(error);

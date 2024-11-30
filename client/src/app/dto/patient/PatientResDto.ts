@@ -19,6 +19,6 @@ export interface PatientResDto {
 }
 
 export interface PatientWithFilterDate {
-  data: PatientResDto[];
-  // prevData: PatientResDto[];
+  patients: PatientResDto[];
+  visitors: PatientResDto[];
 }

@@ -13,6 +13,12 @@ interface DateData {
   value: Date;
 }
 
+interface TabData {
+  title: string;
+  content: string;
+  id: string;
+}
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -39,10 +45,14 @@ export class DashboardComponent implements OnInit {
     'Saturday',
   ];
 
-  tabs: { title: string; content: string }[] = [
-    { title: 'All', content: 'All Content' },
-  ];
+  tabs: TabData[] = [{ title: 'All', content: 'All Content', id: '' }];
 
+  tab: TabData = this.tabs[0];
+
+  totalPatients: number = 0;
+  totalVisitors: number = 0;
+
+  // Date Helpers
   currentDate = new Date();
   lastWeekDate = new Date(this.currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
   lastMonthDate = new Date(
@@ -54,6 +64,7 @@ export class DashboardComponent implements OnInit {
   lastYearDate = new Date(
     this.currentDate.getTime() - 365 * 24 * 60 * 60 * 1000
   );
+  // Date Helpers
 
   // Chart Preferences
   documentStyle = getComputedStyle(document.documentElement);
@@ -107,141 +118,314 @@ export class DashboardComponent implements OnInit {
     },
   ];
 
-  selectedDateDrpdown: DateData = this.dateDropdown[1];
+  selectedDateDrpdown: DateData = this.dateDropdown[0];
+
+  selectedFilter: 'patients' | 'visitors' = 'patients';
+
+  changeSelectedFilter(data: any) {
+    this.selectedFilter = data;
+    this.onDateChange();
+  }
 
   filteringDataByDatetime(dataApi: any, time: string) {
+    this.totalPatients = dataApi.patients.length;
+    this.totalVisitors = dataApi.visitors.length;
     const mappingData: any[] = [];
-    if (time == '7') {
-      for (let i = 0; i < 7; i++) {
-        const dataFilter = dataApi.data.filter(
-          (d: any) =>
-            new Date(d.createdAt).toLocaleDateString() ==
-            new Date(
-              this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
-            ).toLocaleDateString()
-        );
 
-        mappingData.push({
-          data: dataFilter,
-          label:
-            this.weekday[
+    if (this.selectedFilter === 'patients') {
+      if (time == '7') {
+        for (let i = 0; i < 7; i++) {
+          const dataFilter = dataApi.patients.filter(
+            (d: any) =>
+              new Date(d.createdAt).toLocaleDateString() ==
               new Date(
                 this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
-              ).getUTCDay()
-            ],
-        });
-      }
-      this.data = {
-        labels: mappingData.map((d) => d.label).reverse(),
-        datasets: [
-          {
-            label: 'Kunjungan Pasien',
-            fill: false,
-            borderColor: this.documentStyle.getPropertyValue('--green-500'),
-            // yAxisID: 'y',
-            tension: 0.4,
-            data: mappingData.map((d) => d.data.length).reverse(),
-          },
-        ],
-      };
-    } else if (time == '30') {
-      for (let i = 0; i <= 30; i += 6) {
-        const dataFilter = dataApi.data.filter((d: any) => {
-          return (
-            new Date(d.createdAt) <
-              new Date(this.currentDate.getTime() - i * 24 * 60 * 60 * 1000) &&
-            new Date(d.createdAt) >=
-              new Date(
-                this.currentDate.getTime() - (i + 6) * 24 * 60 * 60 * 1000
-              )
+              ).toLocaleDateString()
           );
-        });
 
-        mappingData.push({
-          data: dataFilter,
-          label: new Date(
-            this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
-          ).toLocaleDateString('id-ID'),
-        });
-      }
-      this.data = {
-        labels: mappingData.map((d) => d.label).reverse(),
-        datasets: [
-          {
-            label: 'Kunjungan Pasien',
-            fill: false,
-            borderColor: this.documentStyle.getPropertyValue('--green-500'),
-            // yAxisID: 'y',
-            tension: 0.4,
-            data: mappingData.map((d) => d.data.length).reverse(),
-          },
-        ],
-      };
-    } else if (time == '6') {
-      for (let i = 0; i <= 180; i += 30) {
-        const dataFilter = dataApi.data.filter(
-          (d: any) =>
-            new Date(d.createdAt).getUTCMonth() ==
-            new Date(
+          mappingData.push({
+            data: dataFilter,
+            label:
+              this.weekday[
+                new Date(
+                  this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+                ).getUTCDay()
+              ],
+          });
+        }
+        this.data = {
+          labels: mappingData.map((d) => d.label).reverse(),
+          datasets: [
+            {
+              label: `Kunjungan Pasien`,
+              fill: false,
+              borderColor: this.documentStyle.getPropertyValue('--green-500'),
+              // yAxisID: 'y',
+              tension: 0.4,
+              data: mappingData.map((d) => d.data.length).reverse(),
+            },
+          ],
+        };
+      } else if (time == '30') {
+        for (let i = 0; i <= 30; i += 6) {
+          const dataFilter = dataApi.patients.filter((d: any) => {
+            return (
+              new Date(d.createdAt) <
+                new Date(
+                  this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+                ) &&
+              new Date(d.createdAt) >=
+                new Date(
+                  this.currentDate.getTime() - (i + 6) * 24 * 60 * 60 * 1000
+                )
+            );
+          });
+          mappingData.push({
+            data: dataFilter,
+            label: new Date(
               this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
-            ).getUTCMonth()
-        );
+            ).toLocaleDateString('id-ID'),
+          });
+        }
+        this.data = {
+          labels: mappingData.map((d) => d.label).reverse(),
+          datasets: [
+            {
+              label: `Kunjungan Pasien`,
+              fill: false,
+              borderColor: this.documentStyle.getPropertyValue('--green-500'),
+              // yAxisID: 'y',
+              tension: 0.4,
+              data: mappingData.map((d) => d.data.length).reverse(),
+            },
+          ],
+        };
+      } else if (time == '6') {
+        for (let i = 0; i <= 180; i += 30) {
+          const dataFilter = dataApi.patients.filter(
+            (d: any) =>
+              new Date(d.createdAt).getUTCMonth() ==
+              new Date(
+                this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+              ).getUTCMonth()
+          );
 
-        mappingData.push({
-          data: dataFilter,
-          label: new Date(
-            this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
-          ).toLocaleString('default', { month: 'long' }),
-        });
-      }
-
-      this.data = {
-        labels: mappingData.map((d) => d.label).reverse(),
-        datasets: [
-          {
-            label: 'Kunjungan Pasien',
-            fill: false,
-            borderColor: this.documentStyle.getPropertyValue('--green-500'),
-            // yAxisID: 'y',
-            tension: 0.4,
-            data: mappingData.map((d) => d.data.length).reverse(),
-          },
-        ],
-      };
-    } else if (time == '12') {
-      for (let i = 0; i < 365; i += 30) {
-        const dataFilter = dataApi.data.filter(
-          (d: any) =>
-            new Date(d.createdAt).getUTCMonth() ==
-            new Date(
+          mappingData.push({
+            data: dataFilter,
+            label: new Date(
               this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
-            ).getUTCMonth()
-        );
-        mappingData.push({
-          data: dataFilter,
-          label: new Date(
-            this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
-          ).toLocaleString('default', { month: 'long' }),
-        });
+            ).toLocaleString('default', { month: 'long' }),
+          });
+        }
+
+        this.data = {
+          labels: mappingData.map((d) => d.label).reverse(),
+          datasets: [
+            {
+              label: `Kunjungan Pasien`,
+              fill: false,
+              borderColor: this.documentStyle.getPropertyValue('--green-500'),
+              // yAxisID: 'y',
+              tension: 0.4,
+              data: mappingData.map((d) => d.data.length).reverse(),
+            },
+          ],
+        };
+      } else if (time == '12') {
+        for (let i = 0; i < 365; i += 30) {
+          const dataFilter = dataApi.patients.filter(
+            (d: any) =>
+              new Date(d.createdAt).getUTCMonth() ==
+              new Date(
+                this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+              ).getUTCMonth()
+          );
+          mappingData.push({
+            data: dataFilter,
+            label: new Date(
+              this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+            ).toLocaleString('default', { month: 'long' }),
+          });
+        }
+        this.data = {
+          labels: mappingData.map((d) => d.label).reverse(),
+          datasets: [
+            {
+              label: `Kunjungan Pasien`,
+              fill: false,
+              borderColor: this.documentStyle.getPropertyValue('--green-500'),
+              // yAxisID: 'y',
+              tension: 0.4,
+              data: mappingData.map((d) => d.data.length).reverse(),
+            },
+          ],
+        };
       }
-      this.data = {
-        labels: mappingData.map((d) => d.label).reverse(),
-        datasets: [
-          {
-            label: 'Kunjungan Pasien',
-            fill: false,
-            borderColor: this.documentStyle.getPropertyValue('--green-500'),
-            // yAxisID: 'y',
-            tension: 0.4,
-            data: mappingData.map((d) => d.data.length).reverse(),
-          },
-        ],
-      };
+    } else {
+      if (time == '7') {
+        for (let i = 0; i < 7; i++) {
+          const dataFilter = dataApi.visitors.filter((d: any) => {
+            return (
+              new Date(d.rekam_medis[0].createdAt).toLocaleDateString() ==
+              new Date(
+                this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+              ).toLocaleDateString()
+            );
+          });
+          mappingData.push({
+            data: dataFilter,
+            label:
+              this.weekday[
+                new Date(
+                  this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+                ).getUTCDay()
+              ],
+          });
+        }
+        this.data = {
+          labels: mappingData.map((d) => d.label).reverse(),
+          datasets: [
+            {
+              label: `Kunjungan Pengunjung`,
+              fill: false,
+              borderColor: this.documentStyle.getPropertyValue('--green-500'),
+              // yAxisID: 'y',
+              tension: 0.4,
+              data: mappingData.map((d) => d.data.length).reverse(),
+            },
+          ],
+        };
+      } else if (time == '30') {
+        for (let i = 0; i <= 30; i += 6) {
+          const dataFilter = dataApi.visitors.filter((d: any) => {
+            return (
+              new Date(d.rekam_medis[0].createdAt) <
+                new Date(
+                  this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+                ) &&
+              new Date(d.rekam_medis[0].createdAt) >=
+                new Date(
+                  this.currentDate.getTime() - (i + 6) * 24 * 60 * 60 * 1000
+                )
+            );
+          });
+          mappingData.push({
+            data: dataFilter,
+            label: new Date(
+              this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+            ).toLocaleDateString('id-ID'),
+          });
+        }
+        this.data = {
+          labels: mappingData.map((d) => d.label).reverse(),
+          datasets: [
+            {
+              label: `Kunjungan Pengunjung`,
+              fill: false,
+              borderColor: this.documentStyle.getPropertyValue('--green-500'),
+              // yAxisID: 'y',
+              tension: 0.4,
+              data: mappingData.map((d) => d.data.length).reverse(),
+            },
+          ],
+        };
+      } else if (time == '6') {
+        for (let i = 0; i <= 180; i += 30) {
+          const dataFilter = dataApi.visitors.filter(
+            (d: any) =>
+              new Date(d.rekam_medis[0].createdAt).getUTCMonth() ==
+              new Date(
+                this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+              ).getUTCMonth()
+          );
+          mappingData.push({
+            data: dataFilter,
+            label: new Date(
+              this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+            ).toLocaleString('default', { month: 'long' }),
+          });
+        }
+
+        this.data = {
+          labels: mappingData.map((d) => d.label).reverse(),
+          datasets: [
+            {
+              label: `Kunjungan Pengunjung`,
+              fill: false,
+              borderColor: this.documentStyle.getPropertyValue('--green-500'),
+              // yAxisID: 'y',
+              tension: 0.4,
+              data: mappingData.map((d) => d.data.length).reverse(),
+            },
+          ],
+        };
+      } else if (time == '12') {
+        for (let i = 0; i < 365; i += 30) {
+          const dataFilter = dataApi.visitors.filter(
+            (d: any) =>
+              new Date(d.rekam_medis[0].createdAt).getUTCMonth() ==
+              new Date(
+                this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+              ).getUTCMonth()
+          );
+          mappingData.push({
+            data: dataFilter,
+            label: new Date(
+              this.currentDate.getTime() - i * 24 * 60 * 60 * 1000
+            ).toLocaleString('default', { month: 'long' }),
+          });
+        }
+        this.data = {
+          labels: mappingData.map((d) => d.label).reverse(),
+          datasets: [
+            {
+              label: `Kunjungan Pengunjung`,
+              fill: false,
+              borderColor: this.documentStyle.getPropertyValue('--green-500'),
+              // yAxisID: 'y',
+              tension: 0.4,
+              data: mappingData.map((d) => d.data.length).reverse(),
+            },
+          ],
+        };
+      }
     }
   }
 
-  checkData() {
+  onDateChange() {
     const selectedTime = this.selectedDateDrpdown.name.split(' ')[0];
+
+    firstValueFrom(
+      this.patientService.getAllPatientWithFilterDate(
+        this.selectedDateDrpdown.value,
+        this.tab.id
+      )
+    )
+      .then((res) => {
+        this.filteringDataByDatetime(res, selectedTime);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  onTabChange(id: any) {
+    this.tab = this.tabs[id];
+    this.onDateChange();
+  }
+
+  getData() {
+    // Get All Poli Data
+    firstValueFrom(this.poliService.getAllPoli())
+      .then((res) => {
+        res.map((data) => {
+          this.tabs.push({
+            title: data.nama,
+            content: data.username,
+            id: data.id,
+          });
+        });
+      })
+      .catch((err) => console.log(err));
+    // Get All Poli Data
 
     firstValueFrom(
       this.patientService.getAllPatientWithFilterDate(
@@ -250,34 +434,16 @@ export class DashboardComponent implements OnInit {
     )
       .then((res) => {
         console.log(res);
-        this.filteringDataByDatetime(res, selectedTime);
-      })
-      .catch((err) => console.log(err));
-  }
-
-  getData() {
-    firstValueFrom(this.poliService.getAllPoli())
-      .then((res) => {
-        res.map((data) => {
-          this.tabs.push({ title: data.nama, content: data.username });
-        });
-      })
-      .catch((err) => console.log(err));
-
-    firstValueFrom(
-      this.patientService.getAllPatientWithFilterDate(
-        this.dateDropdown[1].value
-      )
-    )
-      .then((res) => {
-        this.filteringDataByDatetime(res, '30');
+        this.filteringDataByDatetime(
+          res,
+          this.selectedDateDrpdown.name.split(' ')[0]
+        );
       })
       .catch((err) => console.log(err));
   }
 
   ngOnInit(): void {
     this.setDataChart();
-
     this.getData();
   }
 

@@ -31,10 +31,11 @@ export class PatientService {
   }
 
   getAllPatientWithFilterDate(
-    prevData: Date
+    prevData: Date,
+    createdBy: string = ''
   ): Observable<PatientWithFilterDate> {
     return this.base.get(
-      `${environment.API_URL}/patient-filter/?prevDate=${prevData}`
+      `${environment.API_URL}/patient-filter/?prevDate=${prevData}&createdBy=${createdBy}`
     );
   }
 }
