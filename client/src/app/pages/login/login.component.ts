@@ -10,7 +10,6 @@ import { firstValueFrom } from 'rxjs';
 import { LoginService } from '../../services/login.service';
 import { ButtonComponent } from '../../components/button/button.component';
 import { SharedModule } from '../../shared/shared.module';
-import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -34,9 +33,7 @@ export class LoginComponent implements OnInit {
     password: ['', [Validators.required]],
   });
 
-  ngOnInit(): void {
-    console.log(environment.API_URL);
-  }
+  ngOnInit(): void {}
 
   onLogin() {
     if (this.loginReqDto.valid) {
