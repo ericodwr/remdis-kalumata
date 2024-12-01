@@ -61,12 +61,6 @@
           <th>
             <div class="flex align-items-center">Dibuat Pada</div>
           </th>
-          <th pSortableColumn="updatedAt">
-            <div class="flex align-items-center">
-              Jumlah Kunjungan
-              <p-sortIcon field="updatedAt" />
-            </div>
-          </th>
           <th *ngIf="isAdmin">
             <div class="flex align-items-center">Action</div>
           </th>
@@ -87,7 +81,6 @@
           <td>
             {{ poli.createdAt | date : "dd/MM/yyyy" }}
           </td>
-          <td>129</td>
           <td *ngIf="isAdmin">
             <p-button
               icon="pi pi-pencil"
