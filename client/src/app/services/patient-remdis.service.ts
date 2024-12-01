@@ -3,7 +3,7 @@ import { BaseService } from './base.service';
 import { Observable } from 'rxjs';
 import { InsertResDto } from '../dto/InsertResDto';
 import { PatientRemdisReqDto } from '../dto/patient-remdis/PatientRemdisReqDto';
-import { environment } from '../../environments/environment.development';
+import { BASE_URL } from '../constant/api.constant';
 import { AuthService } from './auth.service';
 import { PatientResDto } from '../dto/patient/PatientResDto';
 
@@ -18,17 +18,15 @@ export class PatientRemdisService {
     poliId: string | undefined
   ): Observable<PatientResDto> {
     return this.base.get(
-      `${environment.API_URL}/patient-remdis/?poliId=${poliId}&id=${id}`
+      `${BASE_URL}/patient-remdis/?poliId=${poliId}&id=${id}`
     );
   }
 
   getPasientAndAllRemdis(id: string | null): Observable<PatientResDto> {
-    return this.base.get(
-      `${environment.API_URL}/patient-remdis-admin/?id=${id}`
-    );
+    return this.base.get(`${BASE_URL}/patient-remdis-admin/?id=${id}`);
   }
 
   createPatientRemdis(data: PatientRemdisReqDto): Observable<InsertResDto> {
-    return this.base.post(`${environment.API_URL}/patient-remdis`, data);
+    return this.base.post(`${BASE_URL}/patient-remdis`, data);
   }
 }

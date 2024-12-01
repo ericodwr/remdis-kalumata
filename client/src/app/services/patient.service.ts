@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from './base.service';
 import { AuthService } from './auth.service';
-import { environment } from '../../environments/environment.development';
+import { BASE_URL } from '../constant/api.constant';
+
 import { Observable } from 'rxjs';
 import {
   PatientResDto,
@@ -19,15 +20,15 @@ export class PatientService {
   poliId: string | undefined = this.authService.getProfile()?.id;
 
   getAllPatient(): Observable<PatientResDto[]> {
-    return this.base.get(`${environment.API_URL}/patient`);
+    return this.base.get(`${BASE_URL}/patient`);
   }
 
   updatePatient(data: UpdatePatientReqDto): Observable<InsertResDto> {
-    return this.base.patch(`${environment.API_URL}/patient`, data);
+    return this.base.patch(`${BASE_URL}/patient`, data);
   }
 
   deletePatient(id: string): Observable<InsertResDto> {
-    return this.base.delete(`${environment.API_URL}/patient/?id=${id}`);
+    return this.base.delete(`${BASE_URL}/patient/?id=${id}`);
   }
 
   getAllPatientWithFilterDate(
@@ -35,7 +36,7 @@ export class PatientService {
     createdBy: string = ''
   ): Observable<PatientWithFilterDate> {
     return this.base.get(
-      `${environment.API_URL}/patient-filter/?prevDate=${prevData}&createdBy=${createdBy}`
+      `${BASE_URL}/patient-filter/?prevDate=${prevData}&createdBy=${createdBy}`
     );
   }
 }

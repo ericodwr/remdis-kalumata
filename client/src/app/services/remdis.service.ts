@@ -3,7 +3,7 @@ import { BaseService } from './base.service';
 import { Observable } from 'rxjs';
 import { InsertResDto } from '../dto/InsertResDto';
 import { CreateRekamMedis } from '../dto/remdis/RemdisReqDto';
-import { environment } from '../../environments/environment.development';
+import { BASE_URL } from '../constant/api.constant';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +12,6 @@ export class RemdisService {
   constructor(private base: BaseService) {}
 
   createRemdis(data: CreateRekamMedis): Observable<InsertResDto> {
-    return this.base.post(`${environment.API_URL}/remdis`, data);
+    return this.base.post(`${BASE_URL}/remdis`, data);
   }
 }
