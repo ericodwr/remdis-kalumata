@@ -3,7 +3,7 @@ import { BaseService } from './base.service';
 import { Observable } from 'rxjs';
 import { InsertResDto } from '../dto/InsertResDto';
 import { PatientRemdisReqDto } from '../dto/patient-remdis/PatientRemdisReqDto';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 import { PatientResDto } from '../dto/patient/PatientResDto';
 
