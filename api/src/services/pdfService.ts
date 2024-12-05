@@ -1,4 +1,5 @@
 import PDFDocument from "pdfkit";
+import { getPatientAndAllRemdis } from "./patientService";
 
 const dummyData = [
   {
@@ -41,11 +42,18 @@ const dummyData = [
   },
 ];
 
-export const getPasienData = (dataCallback: any, endCallback: any) => {
-  const doc = new PDFDocument();
-
-  doc.on("data", dataCallback);
-  doc.on("end", endCallback);
-  doc.fontSize(25).text("ini pdf bang");
-  doc.end();
+export const getPasienData = async (
+  dataCallback: any,
+  endCallback: any,
+  id: string
+) => {
+  try {
+    const data = await getPatientAndAllRemdis(id);
+    console.log(data);
+    const doc = new PDFDocument();
+    doc.on("data", dataCallback);
+    doc.on("end", endCallback);
+    doc.fontSize(25).text("ini pdf bang");
+    doc.end();
+  } catch (error) {}
 };

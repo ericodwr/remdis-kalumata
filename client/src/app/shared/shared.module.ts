@@ -34,6 +34,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { TabViewModule } from 'primeng/tabview';
 import { TabMenuModule } from 'primeng/tabmenu';
+import { InputMaskModule } from 'primeng/inputmask';
 
 @NgModule({
   imports: [
@@ -72,6 +73,7 @@ import { TabMenuModule } from 'primeng/tabmenu';
     InputGroupAddonModule,
     TabViewModule,
     TabMenuModule,
+    InputMaskModule,
   ],
   exports: [
     MenubarModule,
@@ -109,6 +111,7 @@ import { TabMenuModule } from 'primeng/tabmenu';
     InputGroupAddonModule,
     TabViewModule,
     TabMenuModule,
+    InputMaskModule,
   ],
 })
 export class SharedModule {}
