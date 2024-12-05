@@ -152,7 +152,7 @@
         <p class="mt-1">Seluruh informasi terkait jejak rekam medis</p>
       </div>
       <div class="flex gap-4">
-        <a href="{{ url }}/pdf" target="_blank">
+        <a href="{{ url }}/pdf/?id={{ patientId }}" target="_blank">
           <app-button label="Cetak Rekam Medis" classBtn="p-button-secondary">
           </app-button>
         </a>
@@ -628,14 +628,13 @@
       <div class="flex flex-column gap-2 col-4">
         <label for="tekanan-darah">Tekanan Darah </label>
         <p-inputGroup>
-          <p-inputNumber
-            [readonly]="true"
+          <input
+            pInputText
+            id="tekanan_darah"
             formControlName="tekanan_darah"
-            inputId="integeronly"
-            id="tekanan-darah"
-            [useGrouping]="false"
+            readonly
           />
-          <p-inputGroupAddon>/Menit</p-inputGroupAddon>
+          <p-inputGroupAddon>/mmHg</p-inputGroupAddon>
         </p-inputGroup>
       </div>
       <div class="flex flex-column gap-2 col-4">

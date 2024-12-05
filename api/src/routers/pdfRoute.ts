@@ -8,6 +8,7 @@ pdfRoute.get(
   "/pdf",
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
+    console.log(id);
     const stream = res.writeHead(200, {
       "Content-Type": "application/pdf",
       "Content-Disposition": "attachment;filename=data.pdf",

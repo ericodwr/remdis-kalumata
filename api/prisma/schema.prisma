@@ -60,10 +60,10 @@ model rekam_medis {
   riwayat_penyakit_obat_opsional      String?  @db.Text
   diagnosa_penyakit                   String   @db.Text
   rencana_tindakan_opsional           String?  @db.Text
-  tekanan_darah                       Int?     @db.Int
+  tekanan_darah                       String?   
   denyut_nadi                         Int?     @db.Int
   pernapasan                          Int?     @db.Int
-  suhu_tubuh                          Int?     @db.Int
+  suhu_tubuh                          Float?     
   tinggi_badan                        Int?     @db.Int
   berat_badan                         Int?     @db.Int
   pemeriksaan_fisik_tambahan_opsional String?  @db.Text

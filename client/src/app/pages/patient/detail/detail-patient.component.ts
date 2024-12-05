@@ -131,6 +131,7 @@ export class DetailPatientComponent implements OnInit {
             this.patientRemdisService.getPasientAndAllRemdis(this.patientId)
           )
             .then((res) => {
+              console.log(res);
               this.patientForm.get('nama')?.setValue(res.nama);
               this.patientForm.get('NIK')?.setValue(res.NIK);
               this.patientForm.get('pekerjaan')?.setValue(res.pekerjaan);
