@@ -9,6 +9,6 @@ export const web = express();
 web.use(express.json());
 web.use(cors());
 
+web.use(pdfRoute);
 web.use(authJwt);
 web.use(adminRoute);
-web.use(pdfRoute);

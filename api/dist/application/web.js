@@ -12,6 +12,6 @@ const pdfRoute_1 = __importDefault(require("../routers/pdfRoute"));
 exports.web = (0, express_1.default)();
 exports.web.use(express_1.default.json());
 exports.web.use((0, cors_1.default)());
+exports.web.use(pdfRoute_1.default);
 exports.web.use(auth_jwt_1.default);
 exports.web.use(adminRoute_1.default);
-exports.web.use(pdfRoute_1.default);

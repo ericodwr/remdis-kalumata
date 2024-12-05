@@ -79,64 +79,6 @@
     </form>
   </div>
 
-  <!-- Form Rekam Medis -->
-  <!-- <div class="bg-white p-4 shadow-1 border-round-xl">
-    <div class="flex justify-content-between">
-      <div>
-        <h3>Informasi Rekam Medis</h3>
-        <p class="mt-1">Seluruh informasi terkait jejak rekam medis</p>
-      </div>
-      <div class="flex gap-4">
-        <app-button label="Cetak Rekam Medis" classBtn="p-button-secondary">
-        </app-button>
-        <app-button label="Tambah Rekam Medis"> </app-button>
-      </div>
-    </div>
-    <div class="surface-200 w-full divider my-4"></div>
-    <p-table
-      #dt1
-      [value]="remdis"
-      dataKey="id"
-      [rows]="10"
-      [paginator]="true"
-      styleClass="p-datatable-gridlines"
-      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-      [showCurrentPageReport]="true"
-      [globalFilterFields]="['nama', 'id']"
-      scrollable="true"
-    >
-      <ng-template pTemplate="header">
-        <tr>
-          <th>
-            <div class="flex align-items-center gap-2">No.</div>
-          </th>
-          <th pSortableColumn="nama">
-            <div class="flex align-items-center">
-              Kategori Poli
-              <p-sortIcon field="nama" />
-            </div>
-          </th>
-          <th pSortableColumn="id">
-            <div class="flex align-items-center">
-              Nama Dokter
-              <p-sortIcon field="id" />
-            </div>
-          </th>
-          <th>
-            <div class="flex align-items-center">Waktu Kunjungan</div>
-          </th>
-          <th pSortableColumn="no_handphone">
-            <div class="flex align-items-center">Diagnosa Penyakit</div>
-          </th>
-          <th pSortableColumn="updatedAt">
-            <div class="flex align-items-center">Action</div>
-          </th>
-        </tr>
-      </ng-template>
-    </p-table>
-    <p class="text-red-600 mt-4">*Rekam Medis wajib di isi!</p>
-  </div> -->
-
   <div class="bg-white p-4 my-5 shadow-1 border-round-xl">
     <div class="flex flex-column gap-3">
       <h3>Detail Rekam Medis</h3>
@@ -259,7 +201,7 @@
               id="tekanan-darah"
               [useGrouping]="false"
             />
-            <p-inputGroupAddon>/Menit</p-inputGroupAddon>
+            <p-inputGroupAddon>/mmHg</p-inputGroupAddon>
           </p-inputGroup>
         </div>
         <div class="flex flex-column gap-2 col-4">
@@ -299,6 +241,8 @@
               id="suhu-tubuh"
               [useGrouping]="false"
               formControlName="suhu_tubuh"
+              mode="decimal"
+              [minFractionDigits]="1"
             />
             <p-inputGroupAddon>C°</p-inputGroupAddon>
           </p-inputGroup>
