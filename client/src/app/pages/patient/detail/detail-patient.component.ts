@@ -7,6 +7,7 @@ import { PatientRemdisService } from '../../../services/patient-remdis.service';
 import { RekamMedisResDto } from '../../../dto/remdis/RemdisResDto';
 import { RemdisService } from '../../../services/remdis.service';
 import { PatientService } from '../../../services/patient.service';
+import { BASE_URL } from '../../../constant/api.constant';
 
 @Component({
   selector: 'detail-patient',
@@ -26,6 +27,8 @@ export class DetailPatientComponent implements OnInit {
   get isAdmin() {
     return this.authService.getProfile()?.role === 'admin';
   }
+
+  url = BASE_URL;
 
   poliId: string | undefined = this.authService.getProfile()?.id;
   patientId: string | null = '';
@@ -128,6 +131,7 @@ export class DetailPatientComponent implements OnInit {
             this.patientRemdisService.getPasientAndAllRemdis(this.patientId)
           )
             .then((res) => {
+              console.log(res);
               this.patientForm.get('nama')?.setValue(res.nama);
               this.patientForm.get('NIK')?.setValue(res.NIK);
               this.patientForm.get('pekerjaan')?.setValue(res.pekerjaan);
@@ -138,7 +142,6 @@ export class DetailPatientComponent implements OnInit {
                 .get('jenis_kelamin')
                 ?.setValue(res.jenis_kelamin);
               this.patientForm.get('alamat')?.setValue(res.alamat);
-
               this.remdis = res.rekam_medis;
             })
             .catch((err) => console.log(err));

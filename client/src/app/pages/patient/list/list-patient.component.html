@@ -67,7 +67,7 @@
               <p-sortIcon field="updatedAt" />
             </div>
           </th>
-          <th *ngIf="!isAdmin">
+          <th>
             <div class="flex align-items-center">Action</div>
           </th>
         </tr>
@@ -91,7 +91,7 @@
           <td>
             {{ patient.rekam_medis[0].createdAt | date : "dd/MM/yyyy" }}
           </td>
-          <td *ngIf="!isAdmin">
+          <td>
             <p-button
               icon="pi pi-pencil"
               class="mr-2"

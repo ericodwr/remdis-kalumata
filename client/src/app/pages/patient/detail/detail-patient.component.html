@@ -152,11 +152,14 @@
         <p class="mt-1">Seluruh informasi terkait jejak rekam medis</p>
       </div>
       <div class="flex gap-4">
-        <app-button label="Cetak Rekam Medis" classBtn="p-button-secondary">
-        </app-button>
+        <a href="{{ url }}/pdf" target="_blank">
+          <app-button label="Cetak Rekam Medis" classBtn="p-button-secondary">
+          </app-button>
+        </a>
         <app-button
           label="Tambah Rekam Medis"
           (clickChange)="isModalCreateRemdis = true"
+          *ngIf="!isAdmin"
         >
         </app-button>
       </div>
