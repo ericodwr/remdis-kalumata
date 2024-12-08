@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { InsertResDto } from '../dto/InsertResDto';
 import { PatientRemdisReqDto } from '../dto/patient-remdis/PatientRemdisReqDto';
 import { BASE_URL } from '../constant/api.constant';
-import { AuthService } from './auth.service';
 import { PatientResDto } from '../dto/patient/PatientResDto';
 
 @Injectable({

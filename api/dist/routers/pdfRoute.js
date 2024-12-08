@@ -16,12 +16,12 @@ const express_1 = __importDefault(require("express"));
 const pdfService_1 = require("../services/pdfService");
 const pdfRoute = express_1.default.Router();
 pdfRoute.get("/pdf", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
+    const { id } = req.query;
     console.log(id);
+    yield (0, pdfService_1.getPasienData)((chunk) => stream.write(chunk), () => stream.end(), (id === null || id === void 0 ? void 0 : id.toString()) ? id === null || id === void 0 ? void 0 : id.toString() : "");
     const stream = res.writeHead(200, {
         "Content-Type": "application/pdf",
         "Content-Disposition": "attachment;filename=data.pdf",
     });
-    (0, pdfService_1.getPasienData)((chunk) => stream.write(chunk), () => stream.end(), id.toString());
 }));
 exports.default = pdfRoute;

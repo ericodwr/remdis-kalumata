@@ -353,15 +353,10 @@
     <div class="col-12 grid">
       <div class="flex flex-column gap-2 col-4">
         <label for="tekanan-darah">Tekanan Darah </label>
-        <p-inputGroup>
-          <p-inputNumber
-            formControlName="tekanan_darah"
-            inputId="integeronly"
-            id="tekanan-darah"
-            [useGrouping]="false"
-          />
-          <p-inputGroupAddon>/Menit</p-inputGroupAddon>
-        </p-inputGroup>
+        <div class="flex w-max">
+          <p-inputMask mask="999/99" formControlName="tekanan_darah" />
+          <p-inputGroupAddon>/mmHg</p-inputGroupAddon>
+        </div>
       </div>
       <div class="flex flex-column gap-2 col-4">
         <label for="denyut-nadi">Denyut Nadi </label>
@@ -400,6 +395,8 @@
             id="suhu-tubuh"
             [useGrouping]="false"
             formControlName="suhu_tubuh"
+            mode="decimal"
+            [minFractionDigits]="1"
           />
           <p-inputGroupAddon>C°</p-inputGroupAddon>
         </p-inputGroup>

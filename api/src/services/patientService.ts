@@ -1,20 +1,11 @@
 import { prisma } from "../application/database";
 import { CreatePatient, EditPatient, Patient } from "../types/pasien";
-import {
-  CreateRekamMedis,
-  CreateRekamMedisWithPatient,
-} from "../types/rekam_medis";
+import { CreateRekamMedisWithPatient } from "../types/rekam_medis";
 
 type CreatePatientRemdis = {
   patient: CreatePatient;
   remdis: CreateRekamMedisWithPatient;
 };
-
-interface VisitorType {
-  rekam_medis: {
-    createdAt: Date;
-  };
-}
 
 export const create = async (data: CreatePatient) => {
   const newPatient = await prisma.pasien.create({
@@ -98,7 +89,6 @@ export const getPatientAndRemdisByPoli = async (
       },
     },
   });
-
   return patient;
 };
 
