@@ -31,38 +31,38 @@ const getPasienData = (dataCallback, endCallback, id) => __awaiter(void 0, void 
         doc
             .text("Nama", col1LeftPos, colTop, { width: colWidth })
             .text(`: ${data === null || data === void 0 ? void 0 : data.nama}`, col2LeftPos, colTop, {
-            width: colWidth,
+            width: colWidth * 2,
         })
             .text("NIK", col3LeftPos, colTop, { width: colWidth })
             .text(`: ${data === null || data === void 0 ? void 0 : data.NIK}`, col4LeftPos, colTop, {
-            width: colWidth,
+            width: colWidth * 2,
         });
         doc
             .text("Pekerjaan", col1LeftPos, colTop * 2, { width: colWidth })
             .text(`: ${data === null || data === void 0 ? void 0 : data.pekerjaan}`, col2LeftPos, colTop * 2, {
-            width: colWidth,
+            width: colWidth * 2,
         })
             .text("No Telp", col3LeftPos, colTop * 2, { width: colWidth })
             .text(`: ${data === null || data === void 0 ? void 0 : data.no_telp}`, col4LeftPos, colTop * 2, {
-            width: colWidth,
+            width: colWidth * 2,
         });
         doc
             .text("Usia", col1LeftPos, colTop * 3, { width: colWidth })
             .text(`: ${data === null || data === void 0 ? void 0 : data.usia}`, col2LeftPos, colTop * 3, {
-            width: colWidth,
+            width: colWidth * 2,
         })
             .text("Agama", col3LeftPos, colTop * 3, { width: colWidth })
             .text(`: ${data === null || data === void 0 ? void 0 : data.agama}`, col4LeftPos, colTop * 3, {
-            width: colWidth,
+            width: colWidth * 2,
         });
         doc
             .text("Jenis Kelamin", col1LeftPos, colTop * 4, { width: colWidth })
             .text(`: ${data === null || data === void 0 ? void 0 : data.jenis_kelamin}`, col2LeftPos, colTop * 4, {
-            width: colWidth,
+            width: colWidth * 2,
         })
             .text("Alamat", col3LeftPos, colTop * 4, { width: colWidth })
             .text(`: ${data === null || data === void 0 ? void 0 : data.alamat}`, col4LeftPos, colTop * 4, {
-            width: colWidth,
+            width: colWidth * 2,
         });
         doc.text("", col1LeftPos, colTop * 10, { width: colWidth });
         doc.table({

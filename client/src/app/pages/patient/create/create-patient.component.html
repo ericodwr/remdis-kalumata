@@ -103,36 +103,14 @@
           >Riwayat Penyakit/Pemberian Obat
           <span class="text-gray-600">(Opsional)</span></label
         >
-        <p-editor
-          [style]="{ height: '220px' }"
-          id="riwayat-penyakit"
+        <textarea
+          rows="5"
+          cols="30"
+          pInputTextarea
           formControlName="riwayat_penyakit_obat_opsional"
+          (resize)="(false)"
         >
-          <ng-template pTemplate="header">
-            <span class="ql-formats">
-              <select class="ql-size mr-3">
-                <option value="small"></option>
-                <!-- Note a missing, thus falsy value, is used to reset to default -->
-                <option selected></option>
-                <option value="large"></option>
-                <option value="huge"></option>
-              </select>
-              <button type="button" class="ql-bold" aria-label="Bold"></button>
-              <button
-                type="button"
-                class="ql-italic"
-                aria-label="Italic"
-              ></button>
-              <button
-                type="button"
-                class="ql-underline"
-                aria-label="Underline"
-              ></button>
-              <button class="ql-list ml-3" value="ordered"></button>
-              <button class="ql-list" value="bullet"></button>
-            </span>
-          </ng-template>
-        </p-editor>
+        </textarea>
       </div>
       <!-- Keluhan Pasien -->
 
@@ -151,36 +129,14 @@
         <label for="rencana-tindakan"
           >Rencana Tindakan <span class="text-gray-600">(Opsional)</span></label
         >
-        <p-editor
-          [style]="{ height: '220px' }"
-          id="rencana-tindakan"
+        <textarea
+          rows="5"
+          cols="30"
+          pInputTextarea
           formControlName="rencana_tindakan_opsional"
+          (resize)="(false)"
         >
-          <ng-template pTemplate="header">
-            <span class="ql-formats">
-              <select class="ql-size mr-3">
-                <option value="small"></option>
-                <!-- Note a missing, thus falsy value, is used to reset to default -->
-                <option selected></option>
-                <option value="large"></option>
-                <option value="huge"></option>
-              </select>
-              <button type="button" class="ql-bold" aria-label="Bold"></button>
-              <button
-                type="button"
-                class="ql-italic"
-                aria-label="Italic"
-              ></button>
-              <button
-                type="button"
-                class="ql-underline"
-                aria-label="Underline"
-              ></button>
-              <button class="ql-list ml-3" value="ordered"></button>
-              <button class="ql-list" value="bullet"></button>
-            </span>
-          </ng-template>
-        </p-editor>
+        </textarea>
       </div>
       <!-- Diagnosis Sementara -->
 
@@ -275,36 +231,14 @@
           >Pemeriksaan Fisik Tambahan
           <span class="text-gray-600">(Opsional)</span></label
         >
-        <p-editor
-          [style]="{ height: '220px' }"
-          id="pemeriksaan-fisik-tambahan"
+        <textarea
+          rows="5"
+          cols="30"
+          pInputTextarea
           formControlName="pemeriksaan_fisik_tambahan_opsional"
+          (resize)="(false)"
         >
-          <ng-template pTemplate="header">
-            <span class="ql-formats">
-              <select class="ql-size mr-3">
-                <option value="small"></option>
-                <!-- Note a missing, thus falsy value, is used to reset to default -->
-                <option selected></option>
-                <option value="large"></option>
-                <option value="huge"></option>
-              </select>
-              <button type="button" class="ql-bold" aria-label="Bold"></button>
-              <button
-                type="button"
-                class="ql-italic"
-                aria-label="Italic"
-              ></button>
-              <button
-                type="button"
-                class="ql-underline"
-                aria-label="Underline"
-              ></button>
-              <button class="ql-list ml-3" value="ordered"></button>
-              <button class="ql-list" value="bullet"></button>
-            </span>
-          </ng-template>
-        </p-editor>
+        </textarea>
       </div>
       <!-- Row Ketiga -->
       <!-- Pemeriksaan Fisik -->
